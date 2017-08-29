@@ -1,7 +1,6 @@
 package f_candy_d.com.boogie.infra;
 
 import android.content.ContentValues;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -14,7 +13,7 @@ import java.util.Set;
 final public class SqlEntity {
 
     @Nullable private String mTableName;
-    @NonNull private ContentValues mValues;
+    @NonNull private ContentValues mValueMap;
 
     public SqlEntity() {
         this(null, null);
@@ -24,21 +23,25 @@ final public class SqlEntity {
         this(tableName, null);
     }
 
-    public SqlEntity(ContentValues values) {
-        this(null, values);
+    public SqlEntity(ContentValues valueMap) {
+        this(null, valueMap);
     }
 
-    public SqlEntity(String tableName, ContentValues values) {
+    public SqlEntity(String tableName, ContentValues valueMap) {
         mTableName = tableName;
-        if (values != null) {
-            mValues = new ContentValues(values);
+        if (valueMap != null) {
+            mValueMap = new ContentValues(valueMap);
         } else {
-            mValues = new ContentValues();
+            mValueMap = new ContentValues();
         }
     }
 
     public Set<String> getColumns() {
-        return mValues.keySet();
+        return mValueMap.keySet();
+    }
+
+    public boolean hasColumn(String column) {
+        return (column != null && mValueMap.containsKey(column));
     }
 
     public void setTableName(String tableName) {
@@ -52,90 +55,90 @@ final public class SqlEntity {
 
     @NonNull
     public ContentValues getValueMap() {
-        return mValues;
+        return mValueMap;
     }
 
     /**
      * region; Setter
      */
 
-    public void put(@NonNull String key, int value) {
-        mValues.put(key, value);
+    public void put(@NonNull String column, int value) {
+        mValueMap.put(column, value);
     }
 
-    public void put(@NonNull String key, long value) {
-        mValues.put(key, value);
+    public void put(@NonNull String column, long value) {
+        mValueMap.put(column, value);
     }
 
-    public void put(@NonNull String key, short value) {
-        mValues.put(key, value);
+    public void put(@NonNull String column, short value) {
+        mValueMap.put(column, value);
     }
 
-    public void put(@NonNull String key, float value) {
-        mValues.put(key, value);
+    public void put(@NonNull String column, float value) {
+        mValueMap.put(column, value);
     }
 
-    public void put(@NonNull String key, double value) {
-        mValues.put(key, value);
+    public void put(@NonNull String column, double value) {
+        mValueMap.put(column, value);
     }
 
-    public void put(@NonNull String key, boolean value) {
-        mValues.put(key, value);
+    public void put(@NonNull String column, boolean value) {
+        mValueMap.put(column, value);
     }
 
-    public void put(@NonNull String key, String value) {
-        mValues.put(key, value);
+    public void put(@NonNull String column, String value) {
+        mValueMap.put(column, value);
     }
 
     /**
      * region; Getter
      */
 
-    public int getIntOrDefault(@NonNull String key, int defult) {
-        if (mValues.containsKey(key)) {
-            return mValues.getAsInteger(key);
+    public int getIntOrDefault(@NonNull String column, int defult) {
+        if (mValueMap.containsKey(column)) {
+            return mValueMap.getAsInteger(column);
         }
         return defult;
     }
 
-    public long getLongOrDefault(@NonNull String key, long defult) {
-        if (mValues.containsKey(key)) {
-            return mValues.getAsLong(key);
+    public long getLongOrDefault(@NonNull String column, long defult) {
+        if (mValueMap.containsKey(column)) {
+            return mValueMap.getAsLong(column);
         }
         return defult;
     }
 
-    public short getShortOrDefault(@NonNull String key, short defult) {
-        if (mValues.containsKey(key)) {
-            return mValues.getAsShort(key);
+    public short getShortOrDefault(@NonNull String column, short defult) {
+        if (mValueMap.containsKey(column)) {
+            return mValueMap.getAsShort(column);
         }
         return defult;
     }
 
-    public float getFloatOrDefault(@NonNull String key, float defult) {
-        if (mValues.containsKey(key)) {
-            return mValues.getAsFloat(key);
+    public float getFloatOrDefault(@NonNull String column, float defult) {
+        if (mValueMap.containsKey(column)) {
+            return mValueMap.getAsFloat(column);
         }
         return defult;
     }
 
-    public double getDoubleOrDefault(@NonNull String key, double defult) {
-        if (mValues.containsKey(key)) {
-            return mValues.getAsDouble(key);
+    public double getDoubleOrDefault(@NonNull String column, double defult) {
+        if (mValueMap.containsKey(column)) {
+            return mValueMap.getAsDouble(column);
         }
         return defult;
     }
 
-    public boolean getBooleanOrDefault(@NonNull String key, boolean defult) {
-        if (mValues.containsKey(key)) {
-            return mValues.getAsBoolean(key);
+    public boolean getBooleanOrDefault(@NonNull String column, boolean defult) {
+        if (mValueMap.containsKey(column)) {
+            return mValueMap.getAsBoolean(column);
         }
         return defult;
     }
 
-    public String getStringOrDefault(@NonNull String key, String defult) {
-        if (mValues.containsKey(key)) {
-            return mValues.getAsString(key);
+    public String getStringOrDefault(@NonNull String column, String defult) {
+        if (mValueMap.containsKey(column)) {
+            return mValueMap.getAsString(column);
         }
         return defult;
     }
