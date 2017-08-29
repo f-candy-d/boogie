@@ -37,6 +37,28 @@ final public class SqlEntity {
         }
     }
 
+    public Set<String> getColumns() {
+        return mValues.keySet();
+    }
+
+    public void setTableName(String tableName) {
+        mTableName = tableName;
+    }
+
+    @Nullable
+    public String getTableName() {
+        return mTableName;
+    }
+
+    @NonNull
+    public ContentValues getValueMap() {
+        return mValues;
+    }
+
+    /**
+     * region; Setter
+     */
+
     public void put(@NonNull String key, int value) {
         mValues.put(key, value);
     }
@@ -65,70 +87,56 @@ final public class SqlEntity {
         mValues.put(key, value);
     }
 
-    public int getIntOrDefault(@NonNull String key, int deflt) {
+    /**
+     * region; Getter
+     */
+
+    public int getIntOrDefault(@NonNull String key, int defult) {
         if (mValues.containsKey(key)) {
             return mValues.getAsInteger(key);
         }
-        return deflt;
+        return defult;
     }
 
-    public long getLongOrDefault(@NonNull String key, long deflt) {
+    public long getLongOrDefault(@NonNull String key, long defult) {
         if (mValues.containsKey(key)) {
             return mValues.getAsLong(key);
         }
-        return deflt;
+        return defult;
     }
 
-    public short getShortOrDefault(@NonNull String key, short deflt) {
+    public short getShortOrDefault(@NonNull String key, short defult) {
         if (mValues.containsKey(key)) {
             return mValues.getAsShort(key);
         }
-        return deflt;
+        return defult;
     }
 
-    public float getFloatOrDefault(@NonNull String key, float deflt) {
+    public float getFloatOrDefault(@NonNull String key, float defult) {
         if (mValues.containsKey(key)) {
             return mValues.getAsFloat(key);
         }
-        return deflt;
+        return defult;
     }
 
-    public double getDoubleOrDefault(@NonNull String key, double deflt) {
+    public double getDoubleOrDefault(@NonNull String key, double defult) {
         if (mValues.containsKey(key)) {
             return mValues.getAsDouble(key);
         }
-        return deflt;
+        return defult;
     }
 
-    public boolean getBooleanOrDefault(@NonNull String key, boolean deflt) {
+    public boolean getBooleanOrDefault(@NonNull String key, boolean defult) {
         if (mValues.containsKey(key)) {
             return mValues.getAsBoolean(key);
         }
-        return deflt;
+        return defult;
     }
 
-    public String getStringOrDefault(@NonNull String key, String deflt) {
+    public String getStringOrDefault(@NonNull String key, String defult) {
         if (mValues.containsKey(key)) {
             return mValues.getAsString(key);
         }
-        return deflt;
-    }
-
-    public Set<String> getColumns() {
-        return mValues.keySet();
-    }
-
-    public void setTableName(String tableName) {
-        mTableName = tableName;
-    }
-
-    @Nullable
-    public String getTableName() {
-        return mTableName;
-    }
-
-    @NonNull
-    public ContentValues getValueMap() {
-        return mValues;
+        return defult;
     }
 }
