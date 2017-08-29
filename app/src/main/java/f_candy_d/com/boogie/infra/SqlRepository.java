@@ -1,6 +1,5 @@
 package f_candy_d.com.boogie.infra;
 
-import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 
 import f_candy_d.com.boogie.infra.sqlite.SqlQuery;
