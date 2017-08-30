@@ -5,4 +5,10 @@ package f_candy_d.com.boogie.utils;
  */
 
 public enum Month {
+
+    APRIL;
+
+    public int value() {
+        return 0;
+    }
 }
