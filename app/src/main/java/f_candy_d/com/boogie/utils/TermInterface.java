@@ -9,11 +9,11 @@ import java.util.Calendar;
 public interface TermInterface {
 
     enum Repetition implements Quantizable {
-        ONE_DAY {@Override public int quantize() {return 0;}},
-        EVERY_DAY {@Override public int quantize() {return 1;}},
-        WEEEKLY {@Override public int quantize() {return 2;}},
-        EVERY_MONTH {@Override public int quantize() {return 3;}},
-        EVERY_YEAR {@Override public int quantize() {return 4;}},
+        ONE_TIME {@Override public int quantize() {return 0;}},
+        DAILY {@Override public int quantize() {return 1;}},
+        WEEKLY {@Override public int quantize() {return 2;}},
+        MONTHLY {@Override public int quantize() {return 3;}},
+        YEARLY {@Override public int quantize() {return 4;}},
         CUSTOM {@Override public int quantize() {return 5;}}
     }
 

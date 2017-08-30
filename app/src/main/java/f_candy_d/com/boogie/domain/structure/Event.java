@@ -17,9 +17,9 @@ public class Event extends Content implements TermInterface {
 
     private static final String DEFAULT_NAME = null;
     private static final String DEFAULT_NOTE = null;
-    private static final int DEFAULT_YEAR = 0;
+    private static final int DEFAULT_YEAR = -1;
     private static final Month DEFAULT_MONTH = null;
-    private static final int DEFAULT_DAY_OF_MONTH = 0;
+    private static final int DEFAULT_DAY_OF_MONTH = -1;
     private static final InstantTime DEFAULT_TIME = null;
     private static final Repetition DEFAULT_REPETITION = null;
 
@@ -159,7 +159,7 @@ public class Event extends Content implements TermInterface {
         Calendar calendar = Calendar.getInstance();
         calendar.set(
                 mStartYear,
-                mStartMonth.value(),
+                mStartMonth.getValue(),
                 mStartDayOfMonth,
                 mStartTime.hourOfDay(),
                 mStartTime.minute());
@@ -197,7 +197,7 @@ public class Event extends Content implements TermInterface {
         Calendar calendar = Calendar.getInstance();
         calendar.set(
                 mEndYear,
-                mEndMonth.value(),
+                mEndMonth.getValue(),
                 mEndDayOfMonth,
                 mEndTime.hourOfDay(),
                 mEndTime.minute());

@@ -31,7 +31,7 @@ public class EventEntityRwService extends SqlEntityRwService {
     }
 
     @Nullable
-    public Event getEventForId(long id) {
+    public Event findEventById(long id) {
         SqlEntity result = getSqlRepository().selectColumnForId(EventTableContract.TABLE_NAME, id);
         if (result != null) {
             return createEventFromSqlEntity(result);
@@ -111,11 +111,40 @@ public class EventEntityRwService extends SqlEntityRwService {
         return event;
     }
 
-    private boolean checkValidation(Event event) {
-        if (event == null) {
+    public boolean checkValidation(Event event) {
+        if (event == null ||
+                event.getName() == null ||
+                event.getRepetition() == null) {
             return false;
         }
 
-        return true;
+        switch (event.getRepetition()) {
+
+            case ONE_TIME:
+                // TODO; Check year, month, day of month, time, day of week, time
+                return true;
+
+            case DAILY:
+                // TODO; Check time
+                return true;
+
+            case WEEKLY:
+                // TODO; Check day of week, time
+                return true;
+
+            case MONTHLY:
+                // TODO; Check day of month, time, day of week
+                return true;
+
+            case YEARLY:
+                // TODO; Check month, day of month, time, day of week
+                return true;
+
+            case CUSTOM:
+                return true;
+
+            default:
+                return false;
+        }
     }
 }

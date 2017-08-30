@@ -1,6 +1,7 @@
 package f_candy_d.com.boogie.utils;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.util.Calendar;
 
@@ -60,7 +61,8 @@ public class InstantTime implements Comparable<InstantTime> {
 
     public void setTimeSinceMidnightInMinutes(int timeSinceMidnightInMinutes) {
         final int h = timeSinceMidnightInMinutes / Time.HOUR_IN_MINUTES;
-        final int m = timeSinceMidnightInMinutes - h;
+        final int m = timeSinceMidnightInMinutes - h * Time.HOUR_IN_MINUTES;
+        Log.d("mylog", String.valueOf(h) + ":" + String.valueOf(m));
         set(h, m);
     }
 

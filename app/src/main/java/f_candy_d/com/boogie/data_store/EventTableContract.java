@@ -7,6 +7,10 @@ import f_candy_d.com.boogie.infra.sql.SqliteTableUtils;
 
 /**
  * Created by daichi on 17/08/30.
+ *
+ * When add/remove any columns of this table, edit the following files which depends on this file.
+ * * {@link f_candy_d.com.boogie.domain.structure.Event}
+ * * {@link f_candy_d.com.boogie.domain.service.EventEntityRwService}
  */
 
 public class EventTableContract implements BaseColumns {
