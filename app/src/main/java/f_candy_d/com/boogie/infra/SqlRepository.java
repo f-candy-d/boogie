@@ -4,8 +4,8 @@ import android.support.annotation.NonNull;
 
 import java.util.Collection;
 
-import f_candy_d.com.boogie.infra.sqlite.SqlQuery;
-import f_candy_d.com.boogie.infra.sqlite.SqlWhere;
+import f_candy_d.com.boogie.infra.sql.SqlQuery;
+import f_candy_d.com.boogie.infra.sql.SqlWhere;
 
 /**
  * Created by daichi on 17/08/30.

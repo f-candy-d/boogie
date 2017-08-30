@@ -1,4 +1,4 @@
-package f_candy_d.com.boogie.infra.sqlite;
+package f_candy_d.com.boogie.infra.sql;
 
 import android.text.TextUtils;
 
