@@ -2,15 +2,26 @@ package f_candy_d.com.boogie.domain.structure;
 
 import java.util.Calendar;
 
+import f_candy_d.com.boogie.data_store.EventTableContract;
+import f_candy_d.com.boogie.data_store.SqlDbContract;
 import f_candy_d.com.boogie.utils.DayOfWeek;
 import f_candy_d.com.boogie.utils.InstantTime;
 import f_candy_d.com.boogie.utils.Month;
+import f_candy_d.com.boogie.utils.TermInterface;
 
 /**
  * Created by daichi on 17/08/30.
  */
 
 public class Event extends Content implements TermInterface {
+
+    private static final String DEFAULT_NAME = null;
+    private static final String DEFAULT_NOTE = null;
+    private static final int DEFAULT_YEAR = 0;
+    private static final Month DEFAULT_MONTH = null;
+    private static final int DEFAULT_DAY_OF_MONTH = 0;
+    private static final InstantTime DEFAULT_TIME = null;
+    private static final Repetition DEFAULT_REPETITION = null;
 
     private long mId;
     private String mName;
@@ -25,11 +36,24 @@ public class Event extends Content implements TermInterface {
     private InstantTime mEndTime;
     private Repetition mRepetition;
 
-    public Event() {}
+    public Event() {
+        mId = SqlDbContract.NULL_ID;
+        mName = DEFAULT_NAME;
+        mName = DEFAULT_NOTE;
+        mStartYear = DEFAULT_YEAR;
+        mStartMonth = DEFAULT_MONTH;
+        mStartDayOfMonth = DEFAULT_DAY_OF_MONTH;
+        mStartTime = DEFAULT_TIME;
+        mEndYear = DEFAULT_YEAR;
+        mEndMonth = DEFAULT_MONTH;
+        mEndDayOfMonth = DEFAULT_DAY_OF_MONTH;
+        mEndTime = DEFAULT_TIME;
+        mRepetition = DEFAULT_REPETITION;
+    }
 
     @Override
     ContentCategory getContentCategory() {
-        return null;
+        return ContentCategory.EVENT;
     }
 
     @Override
@@ -122,7 +146,7 @@ public class Event extends Content implements TermInterface {
 
     @Override
     public DayOfWeek getStartDayOfWeek() {
-        return null;
+        return DayOfWeek.from(getStartDate());
     }
 
     @Override
@@ -160,7 +184,7 @@ public class Event extends Content implements TermInterface {
 
     @Override
     public DayOfWeek getEndDayOfWeek() {
-        return null;
+        return DayOfWeek.from(getStartDate());
     }
 
     @Override

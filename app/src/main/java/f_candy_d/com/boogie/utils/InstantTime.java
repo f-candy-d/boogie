@@ -10,29 +10,24 @@ import java.util.Calendar;
 
 public class InstantTime implements Comparable<InstantTime> {
 
-    static final int MAX_HOUR_OF_DAY = 23;
-    static final int MIN_HOUR_OF_DAY = 0;
-    static final int MAX_MINUTES = 59;
-    static final int MIN_MINUTES = 0;
-    // 1 hour = 60 minutes
-    static final int HOUR_IN_MINUTES = 60;
-
     // 24h format
-    // MIN_HOUR_OF_DAY <= mHourOfDay <= MAX_HOUR_OF_DAY
     private int mHourOfDay;
-    // MIN_MINUTES <= mMinute <= MAX_MINUTES
     private int mMinute;
 
-    InstantTime() {
+    public InstantTime() {
         this(Calendar.getInstance());
     }
 
-    InstantTime(Calendar calendar) {
+    public InstantTime(Calendar calendar) {
         this(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
     }
 
-    InstantTime(int hourOfDay, int minute) {
+    public InstantTime(int hourOfDay, int minute) {
         set(hourOfDay, minute);
+    }
+
+    public InstantTime(int timeSinceMidnightInMinutes) {
+        setTimeSinceMidnightInMinutes(timeSinceMidnightInMinutes);
     }
 
     public void now() {
@@ -42,20 +37,19 @@ public class InstantTime implements Comparable<InstantTime> {
     }
 
     public void startOfDay() {
-        set(MIN_HOUR_OF_DAY, MIN_MINUTES);
+        set(Time.START_OF_DAY_IN_HOUR, Time.ZERO_MINUTES);
     }
 
     public void endOfDay() {
-        set(MAX_HOUR_OF_DAY, MAX_HOUR_OF_DAY);
+        set(Time.END_OF_DAY_IN_HOURS - 1, Time.HOUR_IN_MINUTES - 1);
     }
 
     public int getTimeSinceMidnightInMinutes() {
-        return mHourOfDay * HOUR_IN_MINUTES + mMinute;
+        return Time.toTimeSinceMidnightInMinutes(mHourOfDay, mMinute);
     }
 
-    void set(int hourOfDay, int minute) {
-        if (MIN_HOUR_OF_DAY <= hourOfDay && hourOfDay <= MAX_HOUR_OF_DAY &&
-                MIN_MINUTES <= minute && minute <= MAX_MINUTES) {
+    public void set(int hourOfDay, int minute) {
+        if (Time.isTimeValied(hourOfDay, minute)) {
             mHourOfDay = hourOfDay;
             mMinute = minute;
 
@@ -64,12 +58,18 @@ public class InstantTime implements Comparable<InstantTime> {
         }
     }
 
+    public void setTimeSinceMidnightInMinutes(int timeSinceMidnightInMinutes) {
+        final int h = timeSinceMidnightInMinutes / Time.HOUR_IN_MINUTES;
+        final int m = timeSinceMidnightInMinutes - h;
+        set(h, m);
+    }
+
     public void addHourOfDay(int amount) {
-        mHourOfDay = (mHourOfDay + amount) % (MAX_HOUR_OF_DAY + 1);
+        mHourOfDay = (mHourOfDay + amount) % (Time.END_OF_DAY_IN_HOURS);
     }
 
     public void addMinute(int amount) {
-        mMinute = (mMinute + amount) % (MAX_MINUTES + 1);
+        mMinute = (mMinute + amount) % (Time.HOUR_IN_MINUTES);
     }
 
     public int hourOfDay() {

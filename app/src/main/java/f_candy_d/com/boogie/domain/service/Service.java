@@ -1,4 +1,4 @@
-package f_candy_d.com.boogie.domain;
+package f_candy_d.com.boogie.domain.service;
 
 /**
  * Created by daichi on 17/08/30.

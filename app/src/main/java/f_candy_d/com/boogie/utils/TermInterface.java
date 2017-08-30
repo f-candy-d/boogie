@@ -1,10 +1,6 @@
-package f_candy_d.com.boogie.domain.structure;
+package f_candy_d.com.boogie.utils;
 
 import java.util.Calendar;
-
-import f_candy_d.com.boogie.utils.DayOfWeek;
-import f_candy_d.com.boogie.utils.InstantTime;
-import f_candy_d.com.boogie.utils.Month;
 
 /**
  * Created by daichi on 17/08/30.
@@ -12,13 +8,13 @@ import f_candy_d.com.boogie.utils.Month;
 
 public interface TermInterface {
 
-    public enum Repetition {
-        ONE_DAY,
-        EVERY_DAY,
-        WEEEKLY,
-        EVERY_MONTH,
-        EVERY_YEAR,
-        CUSTOM
+    enum Repetition implements Quantizable {
+        ONE_DAY {@Override public int quantize() {return 0;}},
+        EVERY_DAY {@Override public int quantize() {return 1;}},
+        WEEEKLY {@Override public int quantize() {return 2;}},
+        EVERY_MONTH {@Override public int quantize() {return 3;}},
+        EVERY_YEAR {@Override public int quantize() {return 4;}},
+        CUSTOM {@Override public int quantize() {return 5;}}
     }
 
     int getStartYear();

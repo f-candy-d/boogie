@@ -4,11 +4,11 @@ package f_candy_d.com.boogie.utils;
  * Created by daichi on 17/08/30.
  */
 
-public enum Month {
+public enum Month implements Quantizable {
 
-    APRIL;
+    APRIL {@Override public int quantize() {return 0;}};
 
     public int value() {
-        return 0;
+        return quantize();
     }
 }

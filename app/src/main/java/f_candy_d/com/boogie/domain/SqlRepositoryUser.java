@@ -8,6 +8,6 @@ import f_candy_d.com.boogie.infra.SqlRepository;
  * Created by daichi on 17/08/30.
  */
 
-interface SqlRepositoryUser {
+public interface SqlRepositoryUser {
     void setSqlRepository(@NonNull SqlRepository repository);
 }

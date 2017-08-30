@@ -6,6 +6,7 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -157,5 +158,21 @@ public class SqliteRepository implements SqlRepository {
         sqLiteDatabase.close();
 
         return results.toArray(new SqlEntity[]{});
+    }
+
+    @Nullable
+    @Override
+    public SqlEntity selectColumnForId(@NonNull String table, long id) {
+        SqlCondExpr idIs = new SqlCondExpr(BaseColumns._ID).equalTo(id);
+        SqlQuery query = new SqlQuery();
+        query.putTables(table);
+        query.setSelection(idIs);
+
+        SqlEntity[] results = select(query);
+        if (results.length == 1) {
+            return results[0];
+        }
+
+        return null;
     }
 }

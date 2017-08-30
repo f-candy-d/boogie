@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import java.util.EnumMap;
 
 import f_candy_d.com.boogie.data_store.SqliteDatabaseOpenHelperImpl;
+import f_candy_d.com.boogie.domain.service.Service;
 import f_candy_d.com.boogie.infra.SqlRepository;
 import f_candy_d.com.boogie.infra.sql.SqliteRepository;
 

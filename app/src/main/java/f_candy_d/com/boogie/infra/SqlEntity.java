@@ -6,6 +6,9 @@ import android.support.annotation.Nullable;
 
 import java.util.Set;
 
+import f_candy_d.com.boogie.utils.Quantizable;
+import f_candy_d.com.boogie.utils.QuantizableHelper;
+
 /**
  * Created by daichi on 17/08/30.
  */
@@ -90,6 +93,10 @@ final public class SqlEntity {
         mValueMap.put(column, value);
     }
 
+    public void put(@NonNull String column, @NonNull Quantizable value) {
+        mValueMap.put(column, value.quantize());
+    }
+
     /**
      * region; Getter
      */
@@ -139,6 +146,26 @@ final public class SqlEntity {
     public String getStringOrDefault(@NonNull String column, String defult) {
         if (mValueMap.containsKey(column)) {
             return mValueMap.getAsString(column);
+        }
+        return defult;
+    }
+
+    public <T extends Quantizable> T getQuantizableOrDefault
+            (@NonNull String column, Quantizable.Converter<T> converter, T defult) {
+
+        if (mValueMap.containsKey(column)) {
+            final int quantity = mValueMap.getAsInteger(column);
+            return converter.convertFromQuantity(quantity);
+        }
+        return defult;
+    }
+
+    public <T extends Enum<T> & Quantizable> T getQuantizableEnumOrDefault
+            (@NonNull String column, Class<T> enumClass, T defult) {
+
+        if (mValueMap.containsKey(column)) {
+            final int quantity = mValueMap.getAsInteger(column);
+            return QuantizableHelper.convertFromEnumClass(enumClass, quantity);
         }
         return defult;
     }

@@ -1,6 +1,7 @@
 package f_candy_d.com.boogie.infra;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.Collection;
 
@@ -72,4 +73,13 @@ public interface SqlRepository {
      */
     @NonNull
     SqlEntity[] select(@NonNull SqlQuery query);
+
+    /**
+     * Find the row for a passed ID.
+     * @param table Target table name
+     * @param id ID of a specific row
+     * @return Null if a specific row is not found
+     */
+    @Nullable
+    SqlEntity selectColumnForId(@NonNull String table, long id);
 }
