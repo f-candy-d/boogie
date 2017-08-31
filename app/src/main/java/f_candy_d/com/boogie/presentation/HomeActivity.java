@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+
 import f_candy_d.com.boogie.R;
 import f_candy_d.com.boogie.data_store.SqlDbContract;
 import f_candy_d.com.boogie.data_store.SqliteDatabaseOpenHelperImpl;
@@ -86,6 +88,48 @@ public class HomeActivity extends AppCompatActivity {
         mAdapter.addTerm(Time.TIME_AFTERNOON_START, Time.TIME_EVENING_START, "Afternoon");
         mAdapter.addTerm(Time.TIME_EVENING_START, Time.TIME_NIGHT_START, "Evening");
         mAdapter.addTerm(Time.TIME_NIGHT_START, Time.TIME_MORNING_START, "night");
+
+        Event event = new Event();
+        event.setName("event name");
+        event.setNote("event note");
+        event.setRepetition(Event.Repetition.ONE_TIME);
+        event.setStartYear(2017);
+        event.setStartMonth(Month.APRIL);
+        event.setStartDayOfMonth(5);
+        event.setStartTime(new InstantTime(0, 0));
+        event.setEndYear(2017);
+        event.setEndMonth(Month.APRIL);
+        event.setEndDayOfMonth(5);
+        event.setEndTime(new InstantTime(2, 50));
+
+        ArrayList<Event> events = new ArrayList<>();
+        for (int i = 1; i < 24; ++i) {
+            Event ev = copyEvent(event);
+            ev.setName(ev.getName() + String.valueOf(i));
+            ev.getStartTime().addHourOfDay(i);
+            ev.getEndTime().addHourOfDay(i);
+            events.add(ev);
+        }
+
+        mAdapter.addContents(events);
+        mAdapter.invalidateTermsAndContents();
+    }
+
+    private Event copyEvent(Event e) {
+        Event event = new Event();
+        event.setName(e.getName());
+        event.setNote(e.getNote());
+        event.setRepetition(e.getRepetition());
+        event.setStartYear(e.getStartYear());
+        event.setStartMonth(e.getStartMonth());
+        event.setStartDayOfMonth(e.getStartDayOfMonth());
+        event.setStartTime(new InstantTime(e.getStartTime().getTimeSinceMidnightInMinutes()));
+        event.setEndYear(e.getEndYear());
+        event.setEndMonth(e.getEndMonth());
+        event.setEndDayOfMonth(e.getEndDayOfMonth());
+        event.setEndTime(new InstantTime(e.getEndTime().getTimeSinceMidnightInMinutes()));
+
+        return event;
     }
 
     private void initUI() {

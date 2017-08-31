@@ -120,4 +120,9 @@ public class InstantTime implements Comparable<InstantTime> {
         result = 31 * result + mMinute;
         return result;
     }
- }
+
+    @Override
+    public String toString() {
+        return String.format("InstantTime(%02d:%02d)", mHourOfDay, mMinute);
+    }
+}

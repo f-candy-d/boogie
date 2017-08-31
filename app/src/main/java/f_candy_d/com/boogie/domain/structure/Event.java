@@ -58,7 +58,7 @@ public class Event extends TermContent {
 
     @Override
     public String toSummary() {
-        return null;
+        return "@" + mName + " #" + mNote + " " + mStartTime.toString();
     }
 
     /**

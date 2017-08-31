@@ -61,7 +61,7 @@ public class HomeContentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         mContents.removeAll(contents);
     }
 
-    public void addContents(Collection<TermContent> contents) {
+    public <T extends TermContent> void addContents(Collection<T> contents) {
         mContents.addAll(contents);
     }
 
@@ -153,7 +153,7 @@ public class HomeContentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public ItemViewManager.ItemViewHolder onCreateCardItemViewHolder(int viewType, ListCardView parent) {
-        View view = parent.createItemView(R.layout.general_list_card_view_in_list_view);
+        View view = parent.createItemView(R.layout.list_item_schedule_summary);
         return new ListCardItemViewHolder(view);
     }
 
