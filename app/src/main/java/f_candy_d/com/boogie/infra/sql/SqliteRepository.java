@@ -162,7 +162,7 @@ public class SqliteRepository implements SqlRepository {
 
     @Nullable
     @Override
-    public SqlEntity selectColumnForId(@NonNull String table, long id) {
+    public SqlEntity selectRowForId(@NonNull String table, long id) {
         SqlCondExpr idIs = new SqlCondExpr(BaseColumns._ID).equalTo(id);
         SqlQuery query = new SqlQuery();
         query.putTables(table);

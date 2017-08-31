@@ -15,7 +15,7 @@ final public class SqlDbContract {
     public static final long NULL_ID = -1;
 
     @NonNull
-    static SqliteTableUtils.TableSource[] getTableSourses() {
+    public static SqliteTableUtils.TableSource[] getTableSourses() {
         return new SqliteTableUtils.TableSource[] {
                 EventTableContract.getTableSource(),
                 ContentsRelationTableContract.getTableSource(),

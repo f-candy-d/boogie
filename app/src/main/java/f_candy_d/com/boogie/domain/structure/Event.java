@@ -13,7 +13,7 @@ import f_candy_d.com.boogie.utils.TermInterface;
  * Created by daichi on 17/08/30.
  */
 
-public class Event extends Content implements TermInterface {
+public class Event extends TermContent {
 
     private static final String DEFAULT_NAME = null;
     private static final String DEFAULT_NOTE = null;

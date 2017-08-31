@@ -1,5 +1,6 @@
-package f_candy_d.com.boogie;
+package f_candy_d.com.boogie.presentation;
 
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,9 +11,13 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import f_candy_d.com.boogie.R;
+import f_candy_d.com.boogie.data_store.SqlDbContract;
+import f_candy_d.com.boogie.data_store.SqliteDatabaseOpenHelperImpl;
 import f_candy_d.com.boogie.domain.DomainDirector;
 import f_candy_d.com.boogie.domain.service.EventEntityRwService;
 import f_candy_d.com.boogie.domain.structure.Event;
+import f_candy_d.com.boogie.infra.sql.SqliteTableUtils;
 import f_candy_d.com.boogie.utils.InstantTime;
 import f_candy_d.com.boogie.utils.Month;
 
@@ -31,6 +36,8 @@ public class HomeActivity extends AppCompatActivity {
         init();
         initUI();
 
+        SqliteTableUtils.resetTable(new SqliteDatabaseOpenHelperImpl(this).openWritableDatabase(), SqlDbContract.getTableSourses());
+
         Event event = new Event();
         event.setName("event name");
         event.setNote("event note");
@@ -45,16 +52,17 @@ public class HomeActivity extends AppCompatActivity {
         event.setEndTime(new InstantTime(14, 33));
         EventEntityRwService service = mDomainDirector.getAndCastService(RequiredService.EVENT_RW_SERVICE, EventEntityRwService.class);
         final long id = service.insertEvent(event);
-        event.setId(id);
+        Log.d("mylog", "id =" + String.valueOf(id));
 
         Event loaded = service.findEventById(id);
-        if (loaded != null && service.checkValidation(event)) {
+        if (loaded != null && service.checkValidation(loaded)) {
             Log.d("mylog", "#########################################################");
-            Log.d("mylog", "Name::" + event.getName());
-            Log.d("mylog", "Note::" + event.getNote());
-            Log.d("mylog", "Repetition::" + event.getRepetition().toString());
-            Log.d("mylog", "StartDate::" + event.getStartDate().toString());
-            Log.d("mylog", "EndDate::" + event.getEndDate().toString());
+            Log.d("mylog", "Id::" + String.valueOf(loaded.getId()));
+            Log.d("mylog", "Name::" + loaded.getName());
+            Log.d("mylog", "Note::" + loaded.getNote());
+            Log.d("mylog", "Repetition::" + loaded.getRepetition().toString());
+            Log.d("mylog", "StartDate::" + loaded.getStartDate().toString());
+            Log.d("mylog", "EndDate::" + loaded.getEndDate().toString());
 
         } else {
             Log.d("mylog", "Loading Event for id=" + String.valueOf(id) + " failed");

@@ -81,5 +81,5 @@ public interface SqlRepository {
      * @return Null if a specific row is not found
      */
     @Nullable
-    SqlEntity selectColumnForId(@NonNull String table, long id);
+    SqlEntity selectRowForId(@NonNull String table, long id);
 }

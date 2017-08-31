@@ -24,7 +24,7 @@ public class EventEntityRwService extends SqlEntityRwService {
             return SqlDbContract.NULL_ID;
         }
 
-        SqlEntity entity = createSqlEntityFromEvent(event);
+        SqlEntity entity = createSqlEntityFromEvent(event, false);
         final long id = getSqlRepository().insert(entity);
 
         return (id != -1) ? id : SqlDbContract.NULL_ID;
@@ -32,7 +32,7 @@ public class EventEntityRwService extends SqlEntityRwService {
 
     @Nullable
     public Event findEventById(long id) {
-        SqlEntity result = getSqlRepository().selectColumnForId(EventTableContract.TABLE_NAME, id);
+        SqlEntity result = getSqlRepository().selectRowForId(EventTableContract.TABLE_NAME, id);
         if (result != null) {
             return createEventFromSqlEntity(result);
         } else {
@@ -41,10 +41,13 @@ public class EventEntityRwService extends SqlEntityRwService {
     }
 
     @NonNull
-    private SqlEntity createSqlEntityFromEvent(@NonNull Event event) {
+    private SqlEntity createSqlEntityFromEvent(@NonNull Event event, boolean includeId) {
         SqlEntity entity = new SqlEntity(EventTableContract.TABLE_NAME);
 
-        entity.put(EventTableContract._ID, event.getId());
+        if (includeId) {
+            entity.put(EventTableContract._ID, event.getId());
+        }
+
         entity.put(EventTableContract._NAME, event.getName());
         entity.put(EventTableContract._NOTE, event.getNote());
         entity.put(EventTableContract._REPETITION, event.getRepetition());

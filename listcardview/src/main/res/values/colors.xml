@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Default values for CategoryCardView class -->
+    <color name="categoryCardViewDividerColor">#1F000000</color>
+    <color name="categoryCardViewHeaderTextColor">#455A64</color>
+</resources>

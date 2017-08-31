@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Default values for CategoryCardView class -->
+    <dimen name="category_card_view_header_text_left_margin">16dp</dimen>
+    <dimen name="category_card_view_header_text_right_margin">16dp</dimen>
+    <dimen name="category_card_view_header_text_top_margin">16dp</dimen>
+    <dimen name="category_card_view_header_text_bottom_margin">0dp</dimen>
+    <dimen name="category_card_view_header_text_size">16sp</dimen>
+    <dimen name="category_card_view_divider_stroke_width">0.5dp</dimen>
+    <dimen name="category_card_view_divider_left_margin">16dp</dimen>
+    <dimen name="category_card_view_divider_right_margin">16dp</dimen>
+    <dimen name="category_card_view_items_top_margin">16dp</dimen>
+    <dimen name="category_card_view_items_bottom_margin">0dp</dimen>
+    <dimen name="category_card_view_items_left_margin">0dp</dimen>
+    <dimen name="category_card_view_items_right_margin">0dp</dimen>
+</resources>
