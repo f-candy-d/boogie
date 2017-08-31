@@ -52,12 +52,12 @@ public class Event extends TermContent {
     }
 
     @Override
-    ContentCategory getContentCategory() {
+    public ContentCategory getContentCategory() {
         return ContentCategory.EVENT;
     }
 
     @Override
-    String toSummary() {
+    public String toSummary() {
         return null;
     }
 
@@ -208,5 +208,46 @@ public class Event extends TermContent {
     @Override
     public Repetition getRepetition() {
         return mRepetition;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Event event = (Event) o;
+
+        if (mId != event.mId) return false;
+        if (mStartYear != event.mStartYear) return false;
+        if (mStartDayOfMonth != event.mStartDayOfMonth) return false;
+        if (mEndYear != event.mEndYear) return false;
+        if (mEndDayOfMonth != event.mEndDayOfMonth) return false;
+        if (mName != null ? !mName.equals(event.mName) : event.mName != null) return false;
+        if (mNote != null ? !mNote.equals(event.mNote) : event.mNote != null) return false;
+        if (mStartMonth != event.mStartMonth) return false;
+        if (mStartTime != null ? !mStartTime.equals(event.mStartTime) : event.mStartTime != null)
+            return false;
+        if (mEndMonth != event.mEndMonth) return false;
+        if (mEndTime != null ? !mEndTime.equals(event.mEndTime) : event.mEndTime != null)
+            return false;
+        return mRepetition == event.mRepetition;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (mId ^ (mId >>> 32));
+        result = 31 * result + (mName != null ? mName.hashCode() : 0);
+        result = 31 * result + (mNote != null ? mNote.hashCode() : 0);
+        result = 31 * result + mStartYear;
+        result = 31 * result + (mStartMonth != null ? mStartMonth.hashCode() : 0);
+        result = 31 * result + mStartDayOfMonth;
+        result = 31 * result + (mStartTime != null ? mStartTime.hashCode() : 0);
+        result = 31 * result + mEndYear;
+        result = 31 * result + (mEndMonth != null ? mEndMonth.hashCode() : 0);
+        result = 31 * result + mEndDayOfMonth;
+        result = 31 * result + (mEndTime != null ? mEndTime.hashCode() : 0);
+        result = 31 * result + (mRepetition != null ? mRepetition.hashCode() : 0);
+        return result;
     }
 }

@@ -6,6 +6,13 @@ package f_candy_d.com.boogie.domain.structure;
 
 abstract public class Content {
 
-    abstract ContentCategory getContentCategory();
-    abstract String toSummary();
+    abstract public ContentCategory getContentCategory();
+
+    abstract public String toSummary();
+
+    @Override
+    abstract public boolean equals(Object obj);
+
+    @Override
+    abstract public int hashCode();
 }
