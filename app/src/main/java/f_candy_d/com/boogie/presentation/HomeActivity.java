@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -33,7 +35,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private DomainDirector<RequiredService> mDomainDirector;
-    private HomeContentsAdapter mAdapter;
+    private HomeContentsItemManager mItemManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,11 +85,11 @@ public class HomeActivity extends AppCompatActivity {
         mDomainDirector = new DomainDirector<>(this, RequiredService.class);
         mDomainDirector.addService(RequiredService.EVENT_RW_SERVICE, new EventEntityRwService());
 
-        mAdapter = new HomeContentsAdapter();
-        mAdapter.addTerm(Time.TIME_MORNING_START, Time.TIME_AFTERNOON_START, "Morning");
-        mAdapter.addTerm(Time.TIME_AFTERNOON_START, Time.TIME_EVENING_START, "Afternoon");
-        mAdapter.addTerm(Time.TIME_EVENING_START, Time.TIME_NIGHT_START, "Evening");
-        mAdapter.addTerm(Time.TIME_NIGHT_START, Time.TIME_MORNING_START, "night");
+        HomeContentsAdapter adapter = new HomeContentsAdapter();
+        adapter.addTerm(Time.TIME_MORNING_START, Time.TIME_AFTERNOON_START, "Morning");
+        adapter.addTerm(Time.TIME_AFTERNOON_START, Time.TIME_EVENING_START, "Afternoon");
+        adapter.addTerm(Time.TIME_EVENING_START, Time.TIME_NIGHT_START, "Evening");
+        adapter.addTerm(Time.TIME_NIGHT_START, Time.TIME_MORNING_START, "night");
 
         Event event = new Event();
         event.setName("event name");
@@ -103,7 +105,7 @@ public class HomeActivity extends AppCompatActivity {
         event.setEndTime(new InstantTime(2, 50));
 
         ArrayList<Event> events = new ArrayList<>();
-        for (int i = 1; i < 24; ++i) {
+        for (int i = 1; i < 24; i += 2) {
             Event ev = copyEvent(event);
             ev.setName(ev.getName() + String.valueOf(i));
             ev.getStartTime().addHourOfDay(i);
@@ -111,8 +113,17 @@ public class HomeActivity extends AppCompatActivity {
             events.add(ev);
         }
 
-        mAdapter.addContents(events);
-        mAdapter.invalidateTermsAndContents();
+        adapter.addContents(events);
+        adapter.invalidateTermsAndContents();
+        adapter.showEntryPointsOnTop(true);
+
+        adapter.addEntryPoint(0, "EVENTS", 1);
+        adapter.addEntryPoint(0, "TODO", 2);
+        adapter.addEntryPoint(0, "PLAN", 3);
+        adapter.addEntryPoint(0, "SCHEDULE", 4);
+
+        mItemManager = new HomeContentsItemManager(adapter,
+                new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
     }
 
     private Event copyEvent(Event e) {
@@ -146,7 +157,7 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_home);
-        recyclerView.setAdapter(mAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(mItemManager.getAdapter());
+        recyclerView.setLayoutManager(mItemManager.getLayoutManager());
     }
 }
