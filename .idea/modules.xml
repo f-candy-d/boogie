@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/Boogie.iml" filepath="$PROJECT_DIR$/Boogie.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/listcardview/listcardview.iml" filepath="$PROJECT_DIR$/listcardview/listcardview.iml" />
+      <module fileurl="file://$PROJECT_DIR$/recyclerviewfragment/recyclerviewfragment.iml" filepath="$PROJECT_DIR$/recyclerviewfragment/recyclerviewfragment.iml" />
     </modules>
   </component>
 </project>

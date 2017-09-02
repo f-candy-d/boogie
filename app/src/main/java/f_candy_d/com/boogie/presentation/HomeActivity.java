@@ -1,41 +1,46 @@
 package f_candy_d.com.boogie.presentation;
 
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.text.Layout;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import f_candy_d.com.boogie.R;
-import f_candy_d.com.boogie.data_store.SqlDbContract;
-import f_candy_d.com.boogie.data_store.SqliteDatabaseOpenHelperImpl;
 import f_candy_d.com.boogie.domain.DomainDirector;
 import f_candy_d.com.boogie.domain.service.EventEntityRwService;
 import f_candy_d.com.boogie.domain.structure.Event;
-import f_candy_d.com.boogie.infra.sql.SqliteTableUtils;
+import f_candy_d.com.boogie.domain.usecase.TranslateActivityUseCase;
 import f_candy_d.com.boogie.utils.InstantTime;
+import f_candy_d.com.boogie.utils.MultiSpanMergeAdapter;
 import f_candy_d.com.boogie.utils.Month;
+import f_candy_d.com.boogie.utils.StaggeredGridLayoutItemSpanSizeController;
 import f_candy_d.com.boogie.utils.Time;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity
+        implements EntryPointAdapter.OnEntryPointClickListener {
 
     private enum RequiredService {
         EVENT_RW_SERVICE
     }
 
+    private static final int ENTRY_POINT_SCHEDULE = 0;
+
     private DomainDirector<RequiredService> mDomainDirector;
-    private HomeContentsItemManager mItemManager;
+    private StaggeredGridLayoutItemSpanSizeController mItemSpanSizeController;
+    private TermScheduleAdapter mTermScheduleAdapter;
+    private EntryPointAdapter mEntryPointAdapter;
+    private MultiSpanMergeAdapter mMergeAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,11 +90,11 @@ public class HomeActivity extends AppCompatActivity {
         mDomainDirector = new DomainDirector<>(this, RequiredService.class);
         mDomainDirector.addService(RequiredService.EVENT_RW_SERVICE, new EventEntityRwService());
 
-        HomeContentsAdapter adapter = new HomeContentsAdapter();
-        adapter.addTerm(Time.TIME_MORNING_START, Time.TIME_AFTERNOON_START, "Morning");
-        adapter.addTerm(Time.TIME_AFTERNOON_START, Time.TIME_EVENING_START, "Afternoon");
-        adapter.addTerm(Time.TIME_EVENING_START, Time.TIME_NIGHT_START, "Evening");
-        adapter.addTerm(Time.TIME_NIGHT_START, Time.TIME_MORNING_START, "night");
+        mTermScheduleAdapter = new TermScheduleAdapter();
+        mTermScheduleAdapter.addTerm(Time.TIME_MORNING_START, Time.TIME_AFTERNOON_START, "Morning");
+        mTermScheduleAdapter.addTerm(Time.TIME_AFTERNOON_START, Time.TIME_EVENING_START, "Afternoon");
+        mTermScheduleAdapter.addTerm(Time.TIME_EVENING_START, Time.TIME_NIGHT_START, "Evening");
+        mTermScheduleAdapter.addTerm(Time.TIME_NIGHT_START, Time.TIME_MORNING_START, "night");
 
         Event event = new Event();
         event.setName("event name");
@@ -113,17 +118,37 @@ public class HomeActivity extends AppCompatActivity {
             events.add(ev);
         }
 
-        adapter.addContents(events);
-        adapter.invalidateTermsAndContents();
-        adapter.showEntryPointsOnTop(true);
+        mTermScheduleAdapter.addContents(events);
+        mTermScheduleAdapter.invalidateTermsAndContents();
+        mTermScheduleAdapter.setItemFullSpan(true);
 
-        adapter.addEntryPoint(0, "EVENTS", 1);
-        adapter.addEntryPoint(0, "TODO", 2);
-        adapter.addEntryPoint(0, "PLAN", 3);
-        adapter.addEntryPoint(0, "SCHEDULE", 4);
+        mEntryPointAdapter = new EntryPointAdapter();
+        mEntryPointAdapter.setOnEntryPointClickListener(this);
+        mEntryPointAdapter.setItemFullSpan(false);
+        mEntryPointAdapter.addEntryPoint(0, "Schedule", ENTRY_POINT_SCHEDULE);
+        mEntryPointAdapter.addEntryPoint(0, "TODO List", 2);
+        mEntryPointAdapter.addEntryPoint(0, "Projects", 3);
+        mEntryPointAdapter.addEntryPoint(0, "Settings", 4);
 
-        mItemManager = new HomeContentsItemManager(adapter,
-                new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        mItemSpanSizeController = new StaggeredGridLayoutItemSpanSizeController(2, StaggeredGridLayoutManager.VERTICAL);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_home);
+        recyclerView.setLayoutManager(mItemSpanSizeController.getLayoutManager());
+
+        LayoutInflater inflater = LayoutInflater.from(recyclerView.getContext());
+
+        mMergeAdapter = new MultiSpanMergeAdapter();
+        View header = inflater.inflate(R.layout.list_item_header, recyclerView, false);
+        ((TextView) header.findViewById(R.id.list_item_header_title)).setText("Contents");
+        mMergeAdapter.addView(header, true);
+        mMergeAdapter.addAdapter(mEntryPointAdapter, false);
+        header = inflater.inflate(R.layout.list_item_header, recyclerView, false);
+        ((TextView) header.findViewById(R.id.list_item_header_title)).setText("Today's Schedule Summary");
+        mMergeAdapter.addView(header, true);
+        mMergeAdapter.addAdapter(mTermScheduleAdapter, true);
+
+        mItemSpanSizeController.registerAdapter(mMergeAdapter);
+
+        recyclerView.setAdapter(mMergeAdapter);
     }
 
     private Event copyEvent(Event e) {
@@ -155,9 +180,16 @@ public class HomeActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+    }
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_home);
-        recyclerView.setAdapter(mItemManager.getAdapter());
-        recyclerView.setLayoutManager(mItemManager.getLayoutManager());
+    /**
+     * region; EntryPointAdapter.OnEntryPointClickListener
+     */
+    @Override
+    public void onEntryPointClicked(int tag) {
+       switch (tag) {
+           case ENTRY_POINT_SCHEDULE:
+               TranslateActivityUseCase.translate(this, ScheduleViewerActivity.class);
+       }
     }
 }
