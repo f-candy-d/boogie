@@ -12,14 +12,12 @@ final public class DbContract {
 
     public static final String DATABASE_NAME = "boogie_contents_database";
     public static final int DATABASE_VERSION = 1;
-    public static final long NULL_ID = -1;
 
     @NonNull
-    public static SqliteTableUtils.TableSource[] getTableSourses() {
+    public static SqliteTableUtils.TableSource[] getTableSources() {
         return new SqliteTableUtils.TableSource[] {
-                EventTableContract.getTableSource(),
-                ContentsRelationTableContract.getTableSource(),
-                ContentUidTableContract.getTableSource()
+                TasksRelationTable.getTableSource(),
+                TaskUidTable.getTableSource()
         };
 
     }

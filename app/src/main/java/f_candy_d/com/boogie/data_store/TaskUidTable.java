@@ -12,7 +12,7 @@ import f_candy_d.com.boogie.infra.sql.SqliteTableUtils;
  * witch is able to be got by its ID & table name.
  */
 
-public class ContentUidTableContract implements BaseColumns {
+public class TaskUidTable implements BaseColumns {
 
     public static final String TABLE_NAME = "content_uid";
 

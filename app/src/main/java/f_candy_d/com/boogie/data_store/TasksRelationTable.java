@@ -9,7 +9,7 @@ import f_candy_d.com.boogie.infra.sql.SqliteTableUtils;
  * Created by daichi on 17/08/30.
  */
 
-public class ContentsRelationTableContract implements BaseColumns {
+public class TasksRelationTable implements BaseColumns {
 
     public static final String TABLE_NAME = "contents_relation";
 

@@ -14,6 +14,8 @@ import f_candy_d.com.boogie.infra.sql.SqlWhere;
 
 public interface SqlRepository {
 
+    long NULL_ID = -1;
+
     /**
      * Insert a row into the database.
      * @param entity Initial column values for the row

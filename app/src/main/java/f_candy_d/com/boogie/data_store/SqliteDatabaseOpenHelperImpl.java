@@ -29,7 +29,7 @@ public class SqliteDatabaseOpenHelperImpl extends SQLiteOpenHelper implements Sq
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        SqliteTableUtils.TableSource[] tableSources = DbContract.getTableSourses();
+        SqliteTableUtils.TableSource[] tableSources = DbContract.getTableSources();
         for (SqliteTableUtils.TableSource source : tableSources) {
             SqliteTableUtils.createTable(sqLiteDatabase, source);
         }
