@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import f_candy_d.com.boogie.R;
-import f_candy_d.com.boogie.domain.structure.TermContent;
-import f_candy_d.com.boogie.utils.EditableItemSpanSizeAdapter;
 import f_candy_d.com.boogie.utils.InstantTime;
 import f_candy_d.com.boogie.utils.Time;
 import f_candy_d.com.listcardview.ItemViewManager;
@@ -21,15 +19,15 @@ import f_candy_d.com.listcardview.ListCardView;
  * Created by daichi on 17/09/01.
  */
 
-public class TermScheduleAdapter extends EditableItemSpanSizeAdapter<TermScheduleAdapter.ViewHolder>
-        implements ItemViewManager.Callback<TermScheduleAdapter.ItemViewHolder> {
+public class TimeTermScheduleAdapter extends RecyclerView.Adapter<TimeTermScheduleAdapter.ViewHolder>
+        implements ItemViewManager.Callback<TimeTermScheduleAdapter.ItemViewHolder> {
 
     private ArrayList<Term> mTerms;
-    private ArrayList<TermContent> mContents;
+    private ArrayList<TimeTermInterface> mContents;
     private ItemViewManager<ItemViewHolder> mItemViewManager;
     private boolean mIsItemFullSpan = true;
 
-    public TermScheduleAdapter() {
+    public TimeTermScheduleAdapter() {
         mTerms = new ArrayList<>();
         mContents = new ArrayList<>();
         mItemViewManager = new ItemViewManager<>(this);
@@ -55,11 +53,11 @@ public class TermScheduleAdapter extends EditableItemSpanSizeAdapter<TermSchedul
         addTerm(startTimeSinceMidnightInMinutes, endTimeSinceMidnightInMinutes, name, mTerms.size());
     }
 
-    public void addContent(TermContent content) {
+    public void addContent(TimeTermInterface content) {
         mContents.add(content);
     }
 
-    public <T extends TermContent> void addContents(Collection<T> contents) {
+    public void addContents(Collection<TimeTermInterface> contents) {
         mContents.addAll(contents);
     }
 
@@ -70,7 +68,7 @@ public class TermScheduleAdapter extends EditableItemSpanSizeAdapter<TermSchedul
             term.termIndex = i;
             term.contents.clear();
 
-            for (TermContent content : mContents) {
+            for (TimeTermInterface content : mContents) {
                 if (isTimeInTerm(term, content.getStartTime())) {
                     term.contents.add(content);
                 }
@@ -110,7 +108,6 @@ public class TermScheduleAdapter extends EditableItemSpanSizeAdapter<TermSchedul
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        setupItemSpanSize(holder.itemView, mIsItemFullSpan);
         Term term = mTerms.get(position);
         ListCardView card = holder.card;
         card.setHeaderText(term.name);
@@ -157,7 +154,7 @@ public class TermScheduleAdapter extends EditableItemSpanSizeAdapter<TermSchedul
         String name = null;
         InstantTime startTime = null;
         InstantTime endTime = null;
-        ArrayList<TermContent> contents = null;
+        ArrayList<TimeTermInterface> contents = null;
     }
 
     /**
@@ -185,5 +182,14 @@ public class TermScheduleAdapter extends EditableItemSpanSizeAdapter<TermSchedul
             super(view);
             title = view.findViewById(R.id.list_item_schedule_summary_title);
         }
+    }
+
+    /**
+     * TimeTerm interface
+     */
+    public interface TimeTermInterface {
+        InstantTime getStartTime();
+        InstantTime getEndTime();
+        String toSummary();
     }
 }

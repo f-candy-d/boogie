@@ -8,7 +8,7 @@ import f_candy_d.com.boogie.infra.sql.SqliteTableUtils;
  * Created by daichi on 17/08/30.
  */
 
-final public class SqlDbContract {
+final public class DbContract {
 
     public static final String DATABASE_NAME = "boogie_contents_database";
     public static final int DATABASE_VERSION = 1;

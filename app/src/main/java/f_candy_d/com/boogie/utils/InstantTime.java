@@ -1,7 +1,6 @@
 package f_candy_d.com.boogie.utils;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.util.Calendar;
 
@@ -50,7 +49,7 @@ public class InstantTime implements Comparable<InstantTime> {
     }
 
     public void set(int hourOfDay, int minute) {
-        if (Time.isTimeValied(hourOfDay, minute)) {
+        if (Time.isTimeValid(hourOfDay, minute)) {
             mHourOfDay = hourOfDay;
             mMinute = minute;
 

@@ -14,7 +14,7 @@ import f_candy_d.com.boogie.infra.sql.SqliteTableUtils;
 public class SqliteDatabaseOpenHelperImpl extends SQLiteOpenHelper implements SqliteDatabaseOpenHelper {
 
     public SqliteDatabaseOpenHelperImpl(Context context) {
-        super(context, SqlDbContract.DATABASE_NAME, null, SqlDbContract.DATABASE_VERSION);
+        super(context, DbContract.DATABASE_NAME, null, DbContract.DATABASE_VERSION);
     }
 
     @Override
@@ -29,7 +29,7 @@ public class SqliteDatabaseOpenHelperImpl extends SQLiteOpenHelper implements Sq
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        SqliteTableUtils.TableSource[] tableSources = SqlDbContract.getTableSourses();
+        SqliteTableUtils.TableSource[] tableSources = DbContract.getTableSourses();
         for (SqliteTableUtils.TableSource source : tableSources) {
             SqliteTableUtils.createTable(sqLiteDatabase, source);
         }

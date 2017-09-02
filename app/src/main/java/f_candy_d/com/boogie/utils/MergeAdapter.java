@@ -1,10 +1,7 @@
 package f_candy_d.com.boogie.utils;
 
-import android.content.Context;
-import android.support.annotation.BoolRes;
-import android.support.annotation.LayoutRes;
+
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -15,7 +12,7 @@ import java.util.List;
  * Created by daichi on 17/09/01.
  */
 
-public class MultiSpanMergeAdapter extends EditableItemSpanSizeAdapter<RecyclerView.ViewHolder> {
+public class MergeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     // Contains View or RecyclerView.Adapter
     // Indexes of this array means ContentIndex
@@ -23,7 +20,7 @@ public class MultiSpanMergeAdapter extends EditableItemSpanSizeAdapter<RecyclerV
     // Same order as mContents
     private ArrayList<Boolean> mIsFullSpanFlags;
 
-    public MultiSpanMergeAdapter() {
+    public MergeAdapter() {
         mContents = new ArrayList<>();
         mIsFullSpanFlags = new ArrayList<>();
     }
@@ -101,8 +98,6 @@ public class MultiSpanMergeAdapter extends EditableItemSpanSizeAdapter<RecyclerV
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         int contentIndex = getContentIndexOf(position);
-        setupItemSpanSize(holder.itemView, mIsFullSpanFlags.get(contentIndex));
-
         Object content = mContents.get(contentIndex);
         if (content instanceof RecyclerView.Adapter) {
             ((RecyclerView.Adapter) content).onBindViewHolder(holder, getLocalIndexOf(position, contentIndex));
@@ -113,8 +108,6 @@ public class MultiSpanMergeAdapter extends EditableItemSpanSizeAdapter<RecyclerV
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List<Object> payloads) {
         int contentIndex = getContentIndexOf(position);
-        setupItemSpanSize(holder.itemView, mIsFullSpanFlags.get(contentIndex));
-
         Object content = mContents.get(contentIndex);
         if (content instanceof RecyclerView.Adapter) {
             ((RecyclerView.Adapter) content).onBindViewHolder(holder, getLocalIndexOf(position, contentIndex), payloads);

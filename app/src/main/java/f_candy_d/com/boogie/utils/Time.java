@@ -94,7 +94,7 @@ final public class Time {
      * @param minute 0 min ~ 59 min
      * @return True if the passed time is valid, false otherwise
      */
-    public static boolean isTimeValied(int hourOfDay, int minute) {
+    public static boolean isTimeValid(int hourOfDay, int minute) {
         return (START_OF_DAY_IN_HOUR <= hourOfDay && hourOfDay < END_OF_DAY_IN_HOURS &&
                 ZERO_MINUTES <= minute && minute < HOUR_IN_MINUTES);
     }
@@ -104,7 +104,7 @@ final public class Time {
      * @param timeSinceMidnightInMinutes Time since midnight in minutes
      * @return True if the passed time is valid, false otherwise
      */
-    public static boolean isTimeValied(int timeSinceMidnightInMinutes) {
+    public static boolean isTimeValid(int timeSinceMidnightInMinutes) {
         return (START_OF_DAY <= timeSinceMidnightInMinutes &&
                 timeSinceMidnightInMinutes < END_OF_DAY);
     }

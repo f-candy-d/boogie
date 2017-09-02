@@ -5,5 +5,4 @@ package f_candy_d.com.boogie.domain.structure;
  */
 
 public enum ContentCategory {
-    EVENT
 }
