@@ -108,11 +108,16 @@ public class SqliteRepository implements SqlRepository {
             return false;
         }
 
+        return delete(id, entity.getTableName());
+    }
+
+    @Override
+    public boolean delete(long id, @NonNull String table) {
         SqlCondExpr idIs = new SqlCondExpr(BaseColumns._ID).equalTo(id);
         SQLiteDatabase sqLiteDatabase = mOpenHelper.openWritableDatabase();
 
         // TODO; Check if 'id' is unique before delete a row
-        final int affected = sqLiteDatabase.delete(entity.getTableName(), idIs.formalize(), null);
+        final int affected = sqLiteDatabase.delete(table, idIs.formalize(), null);
         sqLiteDatabase.close();
 
         return (affected != 0);
@@ -162,7 +167,7 @@ public class SqliteRepository implements SqlRepository {
 
     @Nullable
     @Override
-    public SqlEntity selectRowForId(@NonNull String table, long id) {
+    public SqlEntity selectRowById(@NonNull String table, long id) {
         SqlCondExpr idIs = new SqlCondExpr(BaseColumns._ID).equalTo(id);
         SqlQuery query = new SqlQuery();
         query.putTables(table);

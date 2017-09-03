@@ -102,7 +102,17 @@ public class InstantDate {
         mMillisecond = calendar.get(Calendar.MILLISECOND);
     }
 
-    public int getTimeSinceMidnightInMinutes() {
+    public int getTimeOfDaySinceMidnightInMinutes() {
         return mHourOfDay * Time.HOUR_IN_MINUTES + mMinute;
+    }
+
+    public Calendar asCalendar() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(mYear, mMonth, mDayOfMonth, mHourOfDay, mMinute, mMillisecond);
+        return calendar;
+    }
+
+    public long getTimeInMillis() {
+        return asCalendar().getTimeInMillis();
     }
 }

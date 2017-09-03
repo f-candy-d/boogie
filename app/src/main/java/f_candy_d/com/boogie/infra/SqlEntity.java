@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.util.Calendar;
 import java.util.Set;
 
 import f_candy_d.com.boogie.utils.Quantizable;
@@ -97,6 +98,11 @@ final public class SqlEntity {
         mValueMap.put(column, value.quantize());
     }
 
+    public void put(@NonNull String column, @NonNull Calendar calendar) {
+        // Store as long value
+        mValueMap.put(column, calendar.getTimeInMillis());
+    }
+
     /**
      * region; Getter
      */
@@ -166,6 +172,15 @@ final public class SqlEntity {
         if (mValueMap.containsKey(column)) {
             final int quantity = mValueMap.getAsInteger(column);
             return QuantizableHelper.convertFromEnumClass(enumClass, quantity);
+        }
+        return defult;
+    }
+
+    public Calendar getCalendarOrDefault(@NonNull String column, Calendar defult) {
+        if (mValueMap.containsKey(column)) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(mValueMap.getAsLong(column));
+            return calendar;
         }
         return defult;
     }

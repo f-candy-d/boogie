@@ -1,4 +1,4 @@
-package f_candy_d.com.boogie.presentation;
+package f_candy_d.com.boogie.utils;
 
 import android.content.Context;
 import android.graphics.Rect;

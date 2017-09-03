@@ -1,12 +1,12 @@
 package f_candy_d.com.boogie.presentation;
 
+import android.app.Dialog;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Px;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.*;
-import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,7 +15,10 @@ import f_candy_d.com.boogie.R;
 import f_candy_d.com.boogie.data_store.DbContract;
 import f_candy_d.com.boogie.data_store.SqliteDatabaseOpenHelperImpl;
 import f_candy_d.com.boogie.domain.DomainDirector;
+import f_candy_d.com.boogie.domain.structure.TaskType;
+import f_candy_d.com.boogie.domain.usecase.TranslateActivityUseCase;
 import f_candy_d.com.boogie.infra.sql.SqliteTableUtils;
+import f_candy_d.com.boogie.utils.SpacerItemDecoration;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -30,7 +33,7 @@ public class HomeActivity extends AppCompatActivity {
     private SimpleTaskGroupAdapter mSimpleTaskGroupAdapter;
 
     // For ItemDecorations
-    private DividerItemDecoration mDividerItemDecoration;
+    private f_candy_d.com.boogie.utils.DividerItemDecoration mDividerItemDecoration;
     private SpacerItemDecoration mSpacerItemDecoration;
     @Px private int mItemSideSpace = 0;
     @Px private int mItemGroupTopSpace = 0;
@@ -75,9 +78,9 @@ public class HomeActivity extends AppCompatActivity {
         mSimpleTaskGroupAdapter = new SimpleTaskGroupAdapter();
         mSimpleTaskGroupAdapter.setHeaderTitle("Header title");
 
-        mDividerItemDecoration = new DividerItemDecoration(null,
+        mDividerItemDecoration = new f_candy_d.com.boogie.utils.DividerItemDecoration(null,
                 getResources().getDrawable(R.drawable.simple_divider, null));
-        mDividerItemDecoration.setCallback(new DividerItemDecoration.Callback() {
+        mDividerItemDecoration.setCallback(new f_candy_d.com.boogie.utils.DividerItemDecoration.Callback() {
             @Override
             public boolean drawDividerAboveItem(int adapterPosition) {
                 return (mSimpleTaskGroupAdapter.getFirstItemPosition() < adapterPosition &&
@@ -127,12 +130,23 @@ public class HomeActivity extends AppCompatActivity {
         new WhatAddDialog(this)
                 .setOnSelectionChosenListener(new WhatAddDialog.OnSelectionChosenListener() {
                     @Override
-                    public void onSelectionChosen(WhatAddDialog.Selection selection) {
+                    public void onSelectionChosen(WhatAddDialog.Selection selection, Dialog dialog) {
+                        onLaunchAddNewTaskScreen(selection);
+//                        dialog.dismiss();
                     }
                 })
-                .setupDialogRevealAnim(cx, cy, 400, 400)
+                .setupDialogRevealAnim(cx, cy, 400, 600)
                 .getDialog()
                 .show();
     }
 
+    private void onLaunchAddNewTaskScreen(WhatAddDialog.Selection selection) {
+        switch (selection) {
+            case ADD_EVENT:
+                TranslateActivityUseCase.translate(
+                        this,
+                        EditTaskActivity.class,
+                        EditTaskActivity.makeExtras(TaskType.EXACT_TERM));
+        }
+    }
 }

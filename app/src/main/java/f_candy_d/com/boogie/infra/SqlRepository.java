@@ -61,6 +61,8 @@ public interface SqlRepository {
      */
     boolean delete(@NonNull SqlEntity entity);
 
+    boolean delete(long id, @NonNull String table);
+
     /**
      * Delete rows which meet a passed sql WHERE clause in the database.
      * @param where Sql WHERE clause
@@ -83,5 +85,5 @@ public interface SqlRepository {
      * @return Null if a specific row is not found
      */
     @Nullable
-    SqlEntity selectRowForId(@NonNull String table, long id);
+    SqlEntity selectRowById(@NonNull String table, long id);
 }

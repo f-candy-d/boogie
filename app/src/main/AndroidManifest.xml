@@ -21,6 +21,11 @@
         </activity>
         <activity android:name=".presentation.ScheduleViewerActivity">
         </activity>
+        <activity
+            android:name=".presentation.EditTaskActivity"
+            android:label="@string/title_activity_edit_task"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

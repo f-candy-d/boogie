@@ -1,10 +1,12 @@
 package f_candy_d.com.boogie.presentation;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.view.View;
 import android.widget.Button;
 
 import f_candy_d.com.boogie.R;
+import f_candy_d.com.boogie.utils.CircularRevealOverlapDialog;
 
 /**
  * Created by daichi on 17/09/03.
@@ -25,27 +27,27 @@ public class WhatAddDialog extends CircularRevealOverlapDialog {
     }
 
     private void initContents() {
-        Button button = getDialogView().findViewById(R.id.add_todo_button);
+        Button button = getDialogView().findViewById(R.id.add_event_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onButtonClick(Selection.ADD_TODO);
+                onButtonClick(Selection.ADD_EVENT);
             }
         });
     }
 
     private void onButtonClick(Selection selection) {
         if (mListener != null) {
-            mListener.onSelectionChosen(selection);
+            mListener.onSelectionChosen(selection, getDialog());
         }
     }
 
     public enum Selection {
-        ADD_TODO,
+        ADD_EVENT,
         ADD_PLAN
     }
 
     public interface OnSelectionChosenListener {
-        void onSelectionChosen(Selection selection);
+        void onSelectionChosen(Selection selection, Dialog dialog);
     }
 }

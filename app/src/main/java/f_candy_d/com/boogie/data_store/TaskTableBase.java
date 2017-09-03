@@ -9,7 +9,7 @@ import f_candy_d.com.boogie.infra.sql.SqliteTableUtils;
  * Created by daichi on 17/09/02.
  */
 
-abstract class TaskTableBase implements BaseColumns {
+public abstract class TaskTableBase implements BaseColumns {
 
     public static final String _TITLE = "_title";
     public static final String _NOTE = "_note";
