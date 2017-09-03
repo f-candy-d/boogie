@@ -9,6 +9,9 @@ import android.view.View;
 
 /**
  * Created by daichi on 17/09/03.
+ *
+ * Use with LinearLayoutManager (VERTICAL).
+ * LinearLayoutManager (HORIZONTAL) is not supported.
  */
 
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
@@ -81,6 +84,6 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
      * Callback interface
      */
     public interface Callback {
-        boolean drawDividerAboveItem(int itemPosition);
+        boolean drawDividerAboveItem(int adapterPosition);
     }
 }

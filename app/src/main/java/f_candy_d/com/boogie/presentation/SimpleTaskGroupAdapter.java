@@ -1,5 +1,6 @@
 package f_candy_d.com.boogie.presentation;
 
+import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,8 +18,7 @@ import f_candy_d.com.boogie.domain.structure.Task;
  * Created by daichi on 17/09/03.
  */
 
-class SimpleTaskGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
-        implements DividerItemDecoration.Callback {
+class SimpleTaskGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int VIEW_TYPE_HEADER = 0;
     private static final int VIEW_TYPE_TASK = 1;
@@ -84,12 +84,8 @@ class SimpleTaskGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return position - 1;
     }
 
-    /**
-     * DividerItemDecoration.Callback implementation
-     */
-    @Override
-    public boolean drawDividerAboveItem(int itemPosition) {
-        return (1 < itemPosition && itemPosition < getItemCount());
+    public int getFirstItemPosition() {
+        return 1;
     }
 
     /**

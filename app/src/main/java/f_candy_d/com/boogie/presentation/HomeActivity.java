@@ -1,11 +1,12 @@
 package f_candy_d.com.boogie.presentation;
 
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.annotation.Px;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.*;
-import android.support.v7.widget.DividerItemDecoration;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,9 +26,13 @@ public class HomeActivity extends AppCompatActivity {
     private static final int ENTRY_POINT_SCHEDULE = 0;
 
     private DomainDirector<RequiredService> mDomainDirector;
+
     private SimpleTaskGroupAdapter mSimpleTaskGroupAdapter;
-    private f_candy_d.com.boogie.presentation.DividerItemDecoration mDividerItemDecoration;
-//    private android.support.v7.widget.DividerItemDecoration mDividerItemDecoration;
+    private DividerItemDecoration mDividerItemDecoration;
+    private SpacerItemDecoration mSpacerItemDecoration;
+    @Px private int mItemSideSpace = 0;
+    @Px private int mItemGroupTopSpace = 0;
+    @Px private int mItemGroupBottomSpace = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,11 +65,37 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void init() {
+        final float density = getResources().getDisplayMetrics().density;
+        mItemSideSpace = (int) (16 * density);
+        mItemGroupTopSpace = (int) (8 * density);
+        mItemGroupBottomSpace = mItemGroupTopSpace;
+
         mSimpleTaskGroupAdapter = new SimpleTaskGroupAdapter();
-        mDividerItemDecoration = new f_candy_d.com.boogie.presentation.DividerItemDecoration(mSimpleTaskGroupAdapter,
+
+        mDividerItemDecoration = new DividerItemDecoration(null,
                 getResources().getDrawable(R.drawable.simple_divider, null));
-//        mDividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
-//        mDividerItemDecoration.setDrawable(getResources().getDrawable(R.drawable.simple_divider, null));
+        mDividerItemDecoration.setCallback(new DividerItemDecoration.Callback() {
+            @Override
+            public boolean drawDividerAboveItem(int adapterPosition) {
+                return (mSimpleTaskGroupAdapter.getFirstItemPosition() < adapterPosition &&
+                        adapterPosition < mSimpleTaskGroupAdapter.getItemCount());
+            }
+        });
+
+        mSpacerItemDecoration = new SpacerItemDecoration(this, null);
+        mSpacerItemDecoration.setContext(this);
+        mSpacerItemDecoration.setCallback(new SpacerItemDecoration.Callback() {
+            @Override
+            public void getInsertedSpaceAroundItem(int adapterPosition, Rect output) {
+                output.left = mItemSideSpace;
+                output.right = mItemSideSpace;
+                if (adapterPosition == 0) {
+                    output.top = mItemGroupTopSpace;
+                } else if (adapterPosition == mSimpleTaskGroupAdapter.getItemCount() - 1) {
+                    output.bottom = mItemGroupBottomSpace;
+                }
+            }
+        });
     }
 
     private void initUI() {
@@ -83,6 +114,7 @@ public class HomeActivity extends AppCompatActivity {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_home);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mSimpleTaskGroupAdapter);
+        recyclerView.addItemDecoration(mSpacerItemDecoration);
         recyclerView.addItemDecoration(mDividerItemDecoration);
     }
 }
