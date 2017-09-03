@@ -6,6 +6,7 @@ import android.support.annotation.Px;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.*;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -123,7 +124,12 @@ public class HomeActivity extends AppCompatActivity {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         int cx = (int) (fab.getX() + fab.getWidth() / 2);
         int cy = (int) fab.getY();
-        new WhatAddDialogWrapper(this)
+        new WhatAddDialog(this)
+                .setOnSelectionChosenListener(new WhatAddDialog.OnSelectionChosenListener() {
+                    @Override
+                    public void onSelectionChosen(WhatAddDialog.Selection selection) {
+                    }
+                })
                 .setupDialogRevealAnim(cx, cy, 400, 400)
                 .getDialog()
                 .show();

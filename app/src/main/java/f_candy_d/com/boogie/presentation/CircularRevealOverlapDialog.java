@@ -18,23 +18,27 @@ import f_candy_d.com.boogie.R;
  * Created by daichi on 17/09/03.
  */
 
-public class WhatAddDialogWrapper {
+abstract public class CircularRevealOverlapDialog {
 
-    private View mContentView;
+    private View mDialogView;
     private Dialog mDialog;
 
-    public WhatAddDialogWrapper(Context context) {
-        mContentView = View.inflate(context, R.layout.fragment_what_add_dialog, null);
+    public CircularRevealOverlapDialog(Context context, View dialogView) {
+        mDialogView = dialogView;
 
         mDialog = new Dialog(context, R.style.NoDimDialogFragment);
         mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        mDialog.setContentView(mContentView);
+        mDialog.setContentView(mDialogView);
         if (mDialog.getWindow() != null) {
             mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
     }
 
-    public WhatAddDialogWrapper setupDialogRevealAnim(final int cx, final int cy, final int revealDuration, final int dismissDuration) {
+    protected View getDialogView() {
+        return mDialogView;
+    }
+
+    public CircularRevealOverlapDialog setupDialogRevealAnim(final int cx, final int cy, final int revealDuration, final int dismissDuration) {
         mDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialogInterface) {
@@ -57,21 +61,21 @@ public class WhatAddDialogWrapper {
     }
 
     private void revealDialog(final int cx, final int cy, int duration) {
-        int endRadius = (int) Math.hypot(mContentView.getWidth(), mContentView.getHeight());
-        Animator anim = ViewAnimationUtils.createCircularReveal(mContentView, cx, cy, 0, endRadius);
-        mContentView.setVisibility(View.VISIBLE);
+        int endRadius = (int) Math.hypot(mDialogView.getWidth(), mDialogView.getHeight());
+        Animator anim = ViewAnimationUtils.createCircularReveal(mDialogView, cx, cy, 0, endRadius);
+        mDialogView.setVisibility(View.VISIBLE);
         anim.setDuration(duration);
         anim.start();
     }
 
     private void dismissDialog(final int cx, final int cy, int duration) {
-        int endRadius = (int) Math.hypot(mContentView.getWidth(), mContentView.getHeight());
-        Animator anim = ViewAnimationUtils.createCircularReveal(mContentView, cx, cy, endRadius, 0);
+        int endRadius = (int) Math.hypot(mDialogView.getWidth(), mDialogView.getHeight());
+        Animator anim = ViewAnimationUtils.createCircularReveal(mDialogView, cx, cy, endRadius, 0);
         anim.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 mDialog.dismiss();
-                mContentView.setVisibility(View.INVISIBLE);
+                mDialogView.setVisibility(View.INVISIBLE);
             }
         });
         anim.setDuration(duration);
