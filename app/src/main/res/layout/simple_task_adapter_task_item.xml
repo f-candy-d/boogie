@@ -20,7 +20,8 @@
             android:layout_height="wrap_content"
             android:text="Task summary"
             android:textSize="18sp"
-            android:padding="16dp"/>
+            android:padding="16dp"
+            android:id="@+id/simple_task_adapter_task_item_title"/>
 
     </LinearLayout>
 

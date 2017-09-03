@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,13 +25,10 @@ class SimpleTaskGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static final int VIEW_TYPE_TASK = 1;
 
     private ArrayList<Task> mTasks;
+    private String mHeaderTitle;
 
     SimpleTaskGroupAdapter() {
         mTasks = new ArrayList<>();
-        for (int i = 0; i < 10; ++i) {
-            ExactTermTask task = new ExactTermTask();
-            mTasks.add(task);
-        }
     }
 
     void addTask(Task task) {
@@ -39,6 +37,14 @@ class SimpleTaskGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     void addTasks(Collection<Task> tasks) {
         mTasks.addAll(tasks);
+    }
+
+    public String getHeaderTitle() {
+        return mHeaderTitle;
+    }
+
+    public void setHeaderTitle(String headerTitle) {
+        mHeaderTitle = headerTitle;
     }
 
     @Override
@@ -62,6 +68,17 @@ class SimpleTaskGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        switch (getItemViewType(position)) {
+            case VIEW_TYPE_HEADER: {
+                ((HeaderViewHolder) holder).title.setText(mHeaderTitle);
+                break;
+            }
+
+            case VIEW_TYPE_TASK: {
+                TaskViewHolder h = (TaskViewHolder) holder;
+                h.title.setText(mTasks.get(getPositionOffsetFromFirstItem(position)).toSummary());
+            }
+        }
     }
 
     @Override
@@ -81,7 +98,7 @@ class SimpleTaskGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     private int getPositionOffsetFromFirstItem(int position) {
-        return position - 1;
+        return position - getFirstItemPosition();
     }
 
     public int getFirstItemPosition() {
@@ -93,22 +110,21 @@ class SimpleTaskGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
      */
     static class TaskViewHolder extends RecyclerView.ViewHolder {
 
+        TextView title;
+
         public TaskViewHolder(View view) {
             super(view);
+            title = view.findViewById(R.id.simple_task_adapter_task_item_title);
         }
     }
 
     static class HeaderViewHolder extends RecyclerView.ViewHolder {
 
+        TextView title;
+
         public HeaderViewHolder(View view) {
             super(view);
-        }
-    }
-
-    static class FooterViewHolder extends RecyclerView.ViewHolder {
-
-        public FooterViewHolder(View view) {
-            super(view);
+            title = view.findViewById(R.id.simple_task_adapter_header_title);
         }
     }
 }

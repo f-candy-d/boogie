@@ -4,7 +4,6 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Px;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.*;
 import android.view.View;
@@ -28,6 +27,8 @@ public class HomeActivity extends AppCompatActivity {
     private DomainDirector<RequiredService> mDomainDirector;
 
     private SimpleTaskGroupAdapter mSimpleTaskGroupAdapter;
+
+    // For ItemDecorations
     private DividerItemDecoration mDividerItemDecoration;
     private SpacerItemDecoration mSpacerItemDecoration;
     @Px private int mItemSideSpace = 0;
@@ -66,11 +67,12 @@ public class HomeActivity extends AppCompatActivity {
 
     private void init() {
         final float density = getResources().getDisplayMetrics().density;
-        mItemSideSpace = (int) (16 * density);
+        mItemSideSpace = (int) (12 * density);
         mItemGroupTopSpace = (int) (8 * density);
         mItemGroupBottomSpace = mItemGroupTopSpace;
 
         mSimpleTaskGroupAdapter = new SimpleTaskGroupAdapter();
+        mSimpleTaskGroupAdapter.setHeaderTitle("Header title");
 
         mDividerItemDecoration = new DividerItemDecoration(null,
                 getResources().getDrawable(R.drawable.simple_divider, null));
@@ -106,8 +108,7 @@ public class HomeActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                showWhatAddDialog();
             }
         });
 
@@ -117,4 +118,15 @@ public class HomeActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(mSpacerItemDecoration);
         recyclerView.addItemDecoration(mDividerItemDecoration);
     }
+
+    private void showWhatAddDialog() {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        int cx = (int) (fab.getX() + fab.getWidth() / 2);
+        int cy = (int) fab.getY();
+        new WhatAddDialogWrapper(this)
+                .setupDialogRevealAnim(cx, cy, 400, 400)
+                .getDialog()
+                .show();
+    }
+
 }
