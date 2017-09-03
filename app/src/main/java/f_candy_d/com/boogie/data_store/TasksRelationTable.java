@@ -11,7 +11,7 @@ import f_candy_d.com.boogie.infra.sql.SqliteTableUtils;
 
 public class TasksRelationTable implements BaseColumns {
 
-    public static final String TABLE_NAME = "contents_relation";
+    public static final String TABLE_NAME = "tasks_relation";
 
     /**
      * Columns

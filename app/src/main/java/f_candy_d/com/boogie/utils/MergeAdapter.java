@@ -162,7 +162,7 @@ public class MergeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     /**
-     * ViewHolder for a single view
+     * TaskViewHolder for a single view
      */
     private static class SingleViewHolder extends RecyclerView.ViewHolder {
 

@@ -18,13 +18,13 @@ public class SqliteTableUtils {
     public static class TableSource {
         // key -> columnName | value -> {dataType, isNullable}
         @NonNull private Map<String, Pair<SqliteColumnDataType, Boolean>> mPairMap;
-        @NonNull private String mTableName;
+        private String mTableName;
 
-        public TableSource(@NonNull String tableName) {
+        public TableSource(String tableName) {
             this(tableName, -1);
         }
 
-        public TableSource(@NonNull String tableName, int capacity) {
+        public TableSource(String tableName, int capacity) {
             if (capacity < 0) {
                 mPairMap = new HashMap<>();
             } else {
