@@ -8,6 +8,10 @@ public class ExactTermTask extends Task {
 
     public ExactTermTask() {}
 
+    public ExactTermTask(ExactTermTask task) {
+        super(task);
+    }
+
     @Override
     public TaskType getType() {
         return TaskType.EXACT_TERM;

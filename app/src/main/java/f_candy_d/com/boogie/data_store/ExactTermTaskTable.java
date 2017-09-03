@@ -8,9 +8,11 @@ import f_candy_d.com.boogie.infra.sql.SqliteTableUtils;
 
 public class ExactTermTaskTable extends TaskTableBase {
 
-    public static final String TABLE_NAMEE = "exact_term_task";
+    public static final String TABLE_NAME = "exact_term_task";
 
     public static SqliteTableUtils.TableSource getTableSource() {
-        return getBaseTableSource();
+        SqliteTableUtils.TableSource source = getBaseTableSource();
+        source.setTableName(TABLE_NAME);
+        return source;
     }
 }

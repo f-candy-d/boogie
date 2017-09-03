@@ -22,6 +22,17 @@ public abstract class Task {
         init();
     }
 
+    public Task(Task task) {
+        if (task != null) {
+            id = task.id;
+            title = task.title;
+            note = task.note;
+            termStartDate = new InstantDate(task.termStartDate);
+            termEndDate = new InstantDate(task.termEndDate);
+            priority = task.priority;
+        }
+    }
+
     public void init() {
         id = DbContract.NULL_ID;
         title = null;

@@ -47,6 +47,10 @@ public class SqliteTableUtils {
             return mTableName;
         }
 
+        public void setTableName(String tableName) {
+            mTableName = tableName;
+        }
+
         public Set<String> getAllColumns() {
             return mPairMap.keySet();
         }
@@ -85,7 +89,7 @@ public class SqliteTableUtils {
     }
 
     public static boolean deleteTable(@NonNull SQLiteDatabase sqLiteDatabase, @NonNull String tableName) {
-        if (!sqLiteDatabase.isOpen() || sqLiteDatabase.isReadOnly()) {
+        if (!sqLiteDatabase.isOpen() || sqLiteDatabase.isReadOnly() || tableName == null) {
             return false;
         }
 

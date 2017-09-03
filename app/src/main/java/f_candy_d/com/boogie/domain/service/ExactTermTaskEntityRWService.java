@@ -32,7 +32,7 @@ public class ExactTermTaskEntityRWService extends TaskEntityRWService<ExactTermT
     public ExactTermTask findTaskById(long id) {
         onServiceStart();
 
-        SqlEntity entity = getSqlRepository().selectRowById(ExactTermTaskTable.TABLE_NAMEE, id);
+        SqlEntity entity = getSqlRepository().selectRowById(ExactTermTaskTable.TABLE_NAME, id);
         if (entity != null) {
             return makeExactTermTaskFromSqlEntity(entity);
         }
@@ -49,7 +49,7 @@ public class ExactTermTaskEntityRWService extends TaskEntityRWService<ExactTermT
 
     @Override
     public boolean deleteTask(ExactTermTask task) {
-        return getSqlRepository().delete(task.id, ExactTermTaskTable.TABLE_NAMEE);
+        return getSqlRepository().delete(task.id, ExactTermTaskTable.TABLE_NAME);
     }
 
     @NonNull
@@ -62,7 +62,7 @@ public class ExactTermTaskEntityRWService extends TaskEntityRWService<ExactTermT
     @NonNull
     private SqlEntity makeSqlEntityFromExactTermTask(@NonNull ExactTermTask task, boolean includeId) {
         SqlEntity entity = super.makeSqlEntityFromTask(task, includeId);
-        entity.setTableName(ExactTermTaskTable.TABLE_NAMEE);
+        entity.setTableName(ExactTermTaskTable.TABLE_NAME);
         return entity;
     }
 }

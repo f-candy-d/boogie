@@ -1,5 +1,8 @@
 package f_candy_d.com.boogie.utils;
 
+import android.text.format.DateFormat;
+import android.util.Log;
+
 import java.util.Calendar;
 
 /**
@@ -16,7 +19,7 @@ public class InstantDate {
     private int mDayOfWeek;
     private int mHourOfDay;
     private int mMinute;
-    private int mMillisecond;
+    private int mSecond;
 
     public InstantDate() {
         set(Calendar.getInstance());
@@ -28,6 +31,15 @@ public class InstantDate {
 
     public InstantDate(int timeInMillis) {
 
+    }
+
+    public InstantDate(InstantDate instantDate) {
+        if (instantDate != null) {
+            set(instantDate.asCalendar());
+
+        } else {
+            set(Calendar.getInstance());
+        }
     }
 
     public int getYear() {
@@ -58,10 +70,6 @@ public class InstantDate {
         return mDayOfWeek;
     }
 
-    public void setDayOfWeek(int dayOfWeek) {
-        mDayOfWeek = dayOfWeek;
-    }
-
     public int getHourOfDay() {
         return mHourOfDay;
     }
@@ -78,12 +86,12 @@ public class InstantDate {
         this.mMinute = minute;
     }
 
-    public int getMillisecond() {
-        return mMillisecond;
+    public int getSecond() {
+        return mSecond;
     }
 
-    public void setMillisecond(int millisecond) {
-        this.mMillisecond = millisecond;
+    public void setSecond(int second) {
+        this.mSecond = second;
     }
 
     public void set(int timeInMillis) {
@@ -99,7 +107,7 @@ public class InstantDate {
         mDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
         mHourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
         mMinute = calendar.get(Calendar.MINUTE);
-        mMillisecond = calendar.get(Calendar.MILLISECOND);
+        mSecond = calendar.get(Calendar.SECOND);
     }
 
     public int getTimeOfDaySinceMidnightInMinutes() {
@@ -108,7 +116,7 @@ public class InstantDate {
 
     public Calendar asCalendar() {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(mYear, mMonth, mDayOfMonth, mHourOfDay, mMinute, mMillisecond);
+        calendar.set(mYear, mMonth, mDayOfMonth, mHourOfDay, mMinute, mSecond);
         return calendar;
     }
 

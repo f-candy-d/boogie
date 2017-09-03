@@ -17,9 +17,6 @@ public class EditTaskActivity extends AppCompatActivity {
     public static final String EXTRA_TASK_ID = "extra_task_id";
     public static final String EXTRA_TASK_TYPE = "extra_task_type";
 
-    private TaskType mEditTaskType;
-    private long mEditTaskId;
-
     @Nullable
     static Bundle makeExtras(Task task) {
         if (task != null && task.getType() != null) {
@@ -47,20 +44,20 @@ public class EditTaskActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
-        mEditTaskId = intent.getLongExtra(EXTRA_TASK_ID, DbContract.NULL_ID);
-        mEditTaskType = QuantizableHelper.convertFromEnumClass(TaskType.class, intent.getIntExtra(EXTRA_TASK_TYPE, -1));
+        long taskId = intent.getLongExtra(EXTRA_TASK_ID, DbContract.NULL_ID);
+        TaskType taskType = QuantizableHelper.convertFromEnumClass(TaskType.class, intent.getIntExtra(EXTRA_TASK_TYPE, -1));
 
         setContentView(R.layout.activity_edit_task);
         initUI();
+        launchFragmentForType(taskType, taskId);
     }
 
     private void initUI() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        launchFragmentForType(mEditTaskType);
     }
 
-    private void launchFragmentForType(TaskType type) {
+    private void launchFragmentForType(TaskType type, long taskId) {
         if (type == null) {
             throw new NullPointerException();
         }
@@ -68,7 +65,7 @@ public class EditTaskActivity extends AppCompatActivity {
         EditTaskFragment fragment = null;
         switch (type) {
             case EXACT_TERM:
-                fragment = EditExactTermTaskFragment.newInstance(mEditTaskId);
+                fragment = EditExactTermTaskFragment.newInstance(taskId);
                 break;
         }
 
