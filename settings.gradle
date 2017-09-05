@@ -1,1 +1,1 @@
-include ':app', ':listcardview', ':recyclerviewfragment'
+include ':app'
