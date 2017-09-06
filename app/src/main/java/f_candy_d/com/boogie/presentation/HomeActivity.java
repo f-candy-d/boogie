@@ -12,16 +12,11 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.inputmethod.InputMethodSession;
 
 import f_candy_d.com.boogie.R;
 import f_candy_d.com.boogie.data_store.DbContract;
 import f_candy_d.com.boogie.data_store.SqliteDatabaseOpenHelperImpl;
 import f_candy_d.com.boogie.domain.DomainDirector;
-import f_candy_d.com.boogie.domain.service.Service;
-import f_candy_d.com.boogie.domain.service.TaskEntityRWService;
-import f_candy_d.com.boogie.domain.structure.TaskType;
-import f_candy_d.com.boogie.domain.usecase.TranslateActivityUseCase;
 import f_candy_d.com.boogie.infra.sql.SqliteTableUtils;
 import f_candy_d.com.boogie.utils.EasyResultReceiveActivity;
 import f_candy_d.com.boogie.utils.SpacerItemDecoration;

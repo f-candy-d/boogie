@@ -23,12 +23,7 @@ abstract public class TaskWrapper {
     }
 
     final public void setTask(@NonNull Task task) {
-        try {
-            mTask = task.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
-
+        mTask = new Task(task);
         formatTask(mTask);
     }
 

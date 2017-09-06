@@ -11,7 +11,7 @@ import java.util.Calendar;
  * Helper class for {@link java.util.Calendar}
  */
 
-public class InstantDate implements Cloneable {
+public class InstantDate {
 
     private int mYear;
     private int mMonth;
@@ -29,8 +29,8 @@ public class InstantDate implements Cloneable {
         set(calendar);
     }
 
-    public InstantDate(int timeInMillis) {
-
+    public InstantDate(long timeInMillis) {
+        set(timeInMillis);
     }
 
     public InstantDate(InstantDate instantDate) {
@@ -94,7 +94,7 @@ public class InstantDate implements Cloneable {
         this.mSecond = second;
     }
 
-    public void set(int timeInMillis) {
+    public void set(long timeInMillis) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(timeInMillis);
         set(calendar);
@@ -126,10 +126,5 @@ public class InstantDate implements Cloneable {
 
     public long getTimeInMillis() {
         return asCalendar().getTimeInMillis();
-    }
-
-    @Override
-    public InstantDate clone() throws CloneNotSupportedException {
-        return (InstantDate) super.clone();
     }
 }

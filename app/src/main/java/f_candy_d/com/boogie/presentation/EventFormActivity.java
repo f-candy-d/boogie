@@ -16,7 +16,7 @@ import android.widget.TimePicker;
 import f_candy_d.com.boogie.R;
 import f_candy_d.com.boogie.data_store.DbContract;
 import f_candy_d.com.boogie.domain.DomainDirector;
-import f_candy_d.com.boogie.domain.service.TaskEntityRWService;
+import f_candy_d.com.boogie.domain.service.TaskRWService;
 import f_candy_d.com.boogie.domain.structure.EventTaskWrapper;
 import f_candy_d.com.boogie.domain.structure.Task;
 import f_candy_d.com.boogie.utils.InstantDate;
@@ -68,7 +68,7 @@ public class EventFormActivity extends AppCompatActivity {
 
     private void init() {
         mDomainDirector = new DomainDirector(this);
-        mDomainDirector.addService(new TaskEntityRWService());
+        mDomainDirector.addService(new TaskRWService());
     }
 
    private void initUI() {
@@ -166,7 +166,7 @@ public class EventFormActivity extends AppCompatActivity {
         Task task = null;
         if (taskId != DbContract.NULL_ID) {
             // findTaskById() is nullable
-            task = mDomainDirector.getService(TaskEntityRWService.class).findTaskById(taskId);
+            task = mDomainDirector.getService(TaskRWService.class).findTaskById(taskId);
         }
 
         if (task != null) {
@@ -201,10 +201,13 @@ public class EventFormActivity extends AppCompatActivity {
     }
 
     private void finishEditing() {
-        mBuffer.setTitle(mEditTextTitle.getText().toString());
+        String title = mEditTextTitle.getText().toString();
+        title = (title.length() != 0
+        ) ? title : null;
+        mBuffer.setTitle(title);
 
-        final long id = mDomainDirector.getService(TaskEntityRWService.class)
-                .insertTask(mBuffer.getTask());
+        final long id = mDomainDirector.getService(TaskRWService.class)
+                .insert(mBuffer.getTask());
 
         Intent intent = new Intent();
         intent.putExtra(EXTRA_TASK_ID, id);

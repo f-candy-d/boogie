@@ -17,7 +17,7 @@ import android.widget.TimePicker;
 import f_candy_d.com.boogie.R;
 import f_candy_d.com.boogie.data_store.DbContract;
 import f_candy_d.com.boogie.domain.DomainDirector;
-import f_candy_d.com.boogie.domain.service.TaskEntityRWService;
+import f_candy_d.com.boogie.domain.service.TaskRWService;
 import f_candy_d.com.boogie.domain.structure.EventTaskWrapper;
 import f_candy_d.com.boogie.utils.InstantDate;
 
@@ -72,7 +72,7 @@ public class EditEventTaskFragment extends EditTaskFragment {
         if (taskId != DbContract.NULL_ID) {
             // findTaskById() is nullable
             mPassedTask = new EventTaskWrapper(
-                    mDomainDirector.getService(TaskEntityRWService.class).findTaskById(taskId));
+                    mDomainDirector.getService(TaskRWService.class).findTaskById(taskId));
         }
 
         if (mPassedTask != null) {
@@ -94,7 +94,7 @@ public class EditEventTaskFragment extends EditTaskFragment {
     @Override
     protected void init() {
         mDomainDirector = new DomainDirector(getActivity());
-        mDomainDirector.addService(new TaskEntityRWService());
+        mDomainDirector.addService(new TaskRWService());
     }
 
     private void initUI(View view) {
