@@ -83,7 +83,7 @@ public class SqliteRepository implements SqlRepository {
         SqlCondExpr idIs = new SqlCondExpr(BaseColumns._ID).equalTo(id);
         SQLiteDatabase sqLiteDatabase = mOpenHelper.openWritableDatabase();
 
-        // TODO; Check if 'id' is unique before update a row
+        // TODO; Check if 'mId' is unique before update a row
         final int affected = sqLiteDatabase.update(entity.getTableName(), entity.getValueMap(), idIs.formalize(), null);
         sqLiteDatabase.close();
 
@@ -116,7 +116,7 @@ public class SqliteRepository implements SqlRepository {
         SqlCondExpr idIs = new SqlCondExpr(BaseColumns._ID).equalTo(id);
         SQLiteDatabase sqLiteDatabase = mOpenHelper.openWritableDatabase();
 
-        // TODO; Check if 'id' is unique before delete a row
+        // TODO; Check if 'mId' is unique before delete a row
         final int affected = sqLiteDatabase.delete(table, idIs.formalize(), null);
         sqLiteDatabase.close();
 

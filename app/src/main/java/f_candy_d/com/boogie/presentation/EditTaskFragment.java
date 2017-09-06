@@ -36,13 +36,13 @@ abstract class EditTaskFragment extends Fragment {
 
     /**
      * Called in #onCreate().
-     * @param taskId DbContract.NULL_ID or passed id of a task entity
+     * @param taskId DbContract.NULL_ID or passed mId of a task entity
      */
     abstract protected void onPrepareToEdit(long taskId);
 
     /**
-     * Called in #onCreate(). After call this method, #onPrepareToEdit() will be called.
-     * Prepare something for #onPrepareToEdit() in this method.
+     * Called in #onCreate(). After call this method, #prepareToEdit() will be called.
+     * Prepare something for #prepareToEdit() in this method.
      */
     abstract protected void init();
 

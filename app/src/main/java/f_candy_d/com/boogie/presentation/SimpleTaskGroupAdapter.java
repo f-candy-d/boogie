@@ -1,8 +1,6 @@
 package f_candy_d.com.boogie.presentation;
 
-import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import f_candy_d.com.boogie.R;
-import f_candy_d.com.boogie.domain.structure.ExactTermTask;
 import f_candy_d.com.boogie.domain.structure.Task;
 
 /**

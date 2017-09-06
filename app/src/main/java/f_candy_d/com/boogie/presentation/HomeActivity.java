@@ -1,34 +1,36 @@
 package f_candy_d.com.boogie.presentation;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.annotation.Px;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.*;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodSession;
 
 import f_candy_d.com.boogie.R;
 import f_candy_d.com.boogie.data_store.DbContract;
 import f_candy_d.com.boogie.data_store.SqliteDatabaseOpenHelperImpl;
 import f_candy_d.com.boogie.domain.DomainDirector;
+import f_candy_d.com.boogie.domain.service.Service;
+import f_candy_d.com.boogie.domain.service.TaskEntityRWService;
 import f_candy_d.com.boogie.domain.structure.TaskType;
 import f_candy_d.com.boogie.domain.usecase.TranslateActivityUseCase;
 import f_candy_d.com.boogie.infra.sql.SqliteTableUtils;
+import f_candy_d.com.boogie.utils.EasyResultReceiveActivity;
 import f_candy_d.com.boogie.utils.SpacerItemDecoration;
 
-public class HomeActivity extends AppCompatActivity {
-
-    private enum RequiredService {
-        EVENT_RW_SERVICE
-    }
+public class HomeActivity extends EasyResultReceiveActivity {
 
     private static final int ENTRY_POINT_SCHEDULE = 0;
 
-    private DomainDirector<RequiredService> mDomainDirector;
+    private DomainDirector mDomainDirector;
 
     private SimpleTaskGroupAdapter mSimpleTaskGroupAdapter;
 
@@ -76,7 +78,7 @@ public class HomeActivity extends AppCompatActivity {
         mItemGroupBottomSpace = mItemGroupTopSpace;
 
         mSimpleTaskGroupAdapter = new SimpleTaskGroupAdapter();
-        mSimpleTaskGroupAdapter.setHeaderTitle("Header title");
+        mSimpleTaskGroupAdapter.setHeaderTitle("Header mTitle");
 
         mDividerItemDecoration = new f_candy_d.com.boogie.utils.DividerItemDecoration(null,
                 getResources().getDrawable(R.drawable.simple_divider, null));
@@ -131,11 +133,11 @@ public class HomeActivity extends AppCompatActivity {
                 .setOnSelectionChosenListener(new WhatAddDialog.OnSelectionChosenListener() {
                     @Override
                     public void onSelectionChosen(WhatAddDialog.Selection selection, Dialog dialog) {
+                        dialog.dismiss();
                         onLaunchAddNewTaskScreen(selection);
-//                        dialog.dismiss();
                     }
                 })
-                .setupDialogRevealAnim(cx, cy, 400, 600)
+                .setupDialogRevealAnim(cx, cy, 400, 500)
                 .getDialog()
                 .show();
     }
@@ -143,10 +145,17 @@ public class HomeActivity extends AppCompatActivity {
     private void onLaunchAddNewTaskScreen(WhatAddDialog.Selection selection) {
         switch (selection) {
             case ADD_EVENT:
-                TranslateActivityUseCase.translate(
-                        this,
-                        EditTaskActivity.class,
-                        EditTaskActivity.makeExtras(TaskType.EXACT_TERM));
+                startActivityForResult(EventFormActivity.makeIntent(this),
+                        new OnActivityResultListener() {
+                            @Override
+                            public void onResult(boolean isOk, @Nullable Intent data) {
+                                if (isOk) {
+                                    Log.d("mylog", "activity result id -> " + EventFormActivity.getTaskIdFromIntent(data));
+                                } else {
+                                    Log.d("mylog", "actibity result failed...");
+                                }
+                            }
+                        });
         }
     }
 }

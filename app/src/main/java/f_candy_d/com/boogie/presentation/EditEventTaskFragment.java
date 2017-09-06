@@ -6,7 +6,6 @@ import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,25 +14,24 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
-import java.util.Calendar;
-
 import f_candy_d.com.boogie.R;
 import f_candy_d.com.boogie.data_store.DbContract;
 import f_candy_d.com.boogie.domain.DomainDirector;
-import f_candy_d.com.boogie.domain.service.ExactTermTaskEntityRWService;
-import f_candy_d.com.boogie.domain.structure.ExactTermTask;
+import f_candy_d.com.boogie.domain.service.TaskEntityRWService;
+import f_candy_d.com.boogie.domain.structure.EventTaskWrapper;
 import f_candy_d.com.boogie.utils.InstantDate;
 
 /**
- * Use the {@link EditExactTermTaskFragment#newInstance} factory method to
+ * Use the {@link EditEventTaskFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class EditExactTermTaskFragment extends EditTaskFragment {
+public class EditEventTaskFragment extends EditTaskFragment {
 
-    @Nullable ExactTermTask mTask;
+    @Nullable
+    EventTaskWrapper mPassedTask;
     // Write input data in this variable
-    ExactTermTask mBuffer;
-    private DomainDirector<Request> mDomainDirector;
+    EventTaskWrapper mBuffer;
+    private DomainDirector mDomainDirector;
 
     // UI
     EditText mEditTextTitle;
@@ -43,11 +41,7 @@ public class EditExactTermTaskFragment extends EditTaskFragment {
     Button mEndDateButton;
     Button mEndTimeButton;
 
-    private enum Request {
-        TASK_DATA_RW
-    }
-
-    public EditExactTermTaskFragment() {
+    public EditEventTaskFragment() {
         // Required empty public constructor
     }
 
@@ -55,8 +49,8 @@ public class EditExactTermTaskFragment extends EditTaskFragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      */
-    public static EditExactTermTaskFragment newInstance(long taskId) {
-        EditExactTermTaskFragment fragment = new EditExactTermTaskFragment();
+    public static EditEventTaskFragment newInstance(long taskId) {
+        EditEventTaskFragment fragment = new EditEventTaskFragment();
         fragment.setArguments(makeArgs(taskId));
         return fragment;
     }
@@ -72,38 +66,35 @@ public class EditExactTermTaskFragment extends EditTaskFragment {
 
     @Override
     protected void onPrepareToEdit(long taskId) {
-        mTask = null;
+        mPassedTask = null;
         mBuffer = null;
 
         if (taskId != DbContract.NULL_ID) {
             // findTaskById() is nullable
-            mTask = mDomainDirector
-                    .getAndCastService(Request.TASK_DATA_RW, ExactTermTaskEntityRWService.class)
-                    .findTaskById(taskId);
+            mPassedTask = new EventTaskWrapper(
+                    mDomainDirector.getService(TaskEntityRWService.class).findTaskById(taskId));
         }
 
-        if (mTask != null) {
-            mBuffer = new ExactTermTask(mTask);
+        if (mPassedTask != null) {
+            mBuffer = new EventTaskWrapper(mPassedTask.getTask());
         } else {
-            mBuffer = new ExactTermTask();
-            mBuffer.termStartDate = new InstantDate();
-            mBuffer.termEndDate = new InstantDate();
+            mBuffer = new EventTaskWrapper();
+            mBuffer.setStartDate(new InstantDate());
+            mBuffer.setEndDate(new InstantDate());
         }
     }
 
     private void reflectBufferToUI() {
-        mEditTextNote.setText(mBuffer.note);
-        mEditTextTitle.setText(mBuffer.title);
-        mStartDateButton.setText("Start " + DateFormat.format("yyyy-MM-dd", mBuffer.termStartDate.asCalendar()));
-        mEndDateButton.setText("End " + DateFormat.format("yyyy-MM-dd", mBuffer.termEndDate.asCalendar()));
-        mStartTimeButton.setText("Start " + DateFormat.format("hh:mm a", mBuffer.termStartDate.asCalendar()));
-        mEndTimeButton.setText("End " + DateFormat.format("hh:mm a", mBuffer.termEndDate.asCalendar()));
+        mStartDateButton.setText("Start " + DateFormat.format("yyyy-MM-dd", mBuffer.getStartDate().asCalendar()));
+        mEndDateButton.setText("End " + DateFormat.format("yyyy-MM-dd", mBuffer.getEndDate().asCalendar()));
+        mStartTimeButton.setText("Start " + DateFormat.format("hh:mm a", mBuffer.getStartDate().asCalendar()));
+        mEndTimeButton.setText("End " + DateFormat.format("hh:mm a", mBuffer.getEndDate().asCalendar()));
     }
 
     @Override
     protected void init() {
-        mDomainDirector = new DomainDirector<>(getActivity(), Request.class);
-        mDomainDirector.addService(Request.TASK_DATA_RW, new ExactTermTaskEntityRWService());
+        mDomainDirector = new DomainDirector(getActivity());
+        mDomainDirector.addService(new TaskEntityRWService());
     }
 
     private void initUI(View view) {
@@ -114,15 +105,15 @@ public class EditExactTermTaskFragment extends EditTaskFragment {
         mStartDateButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        showDatePicker(mBuffer.termStartDate.getYear(),
-                                mBuffer.termStartDate.getMonth(),
-                                mBuffer.termStartDate.getDayOfMonth(),
+                        showDatePicker(mBuffer.getStartDate().getYear(),
+                                mBuffer.getStartDate().getMonth(),
+                                mBuffer.getStartDate().getDayOfMonth(),
                                 new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                                mBuffer.termStartDate.setYear(i);
-                                mBuffer.termStartDate.setMonth(i1);
-                                mBuffer.termStartDate.setDayOfMonth(i2);
+                                mBuffer.getStartDate().setYear(i);
+                                mBuffer.getStartDate().setMonth(i1);
+                                mBuffer.getStartDate().setDayOfMonth(i2);
 
                                 reflectBufferToUI();
                             }
@@ -134,13 +125,13 @@ public class EditExactTermTaskFragment extends EditTaskFragment {
         mStartTimeButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        showTimePicker(mBuffer.termStartDate.getHourOfDay(),
-                                mBuffer.termStartDate.getMinute(),
+                        showTimePicker(mBuffer.getStartDate().getHourOfDay(),
+                                mBuffer.getStartDate().getMinute(),
                                 new TimePickerDialog.OnTimeSetListener() {
                                     @Override
                                     public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                                        mBuffer.termStartDate.setHourOfDay(i);
-                                        mBuffer.termStartDate.setMinute(i1);
+                                        mBuffer.getStartDate().setHourOfDay(i);
+                                        mBuffer.getStartDate().setMinute(i1);
 
                                         reflectBufferToUI();
                                     }
@@ -152,15 +143,15 @@ public class EditExactTermTaskFragment extends EditTaskFragment {
         mEndDateButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        showDatePicker(mBuffer.termEndDate.getYear(),
-                                mBuffer.termEndDate.getMonth(),
-                                mBuffer.termEndDate.getDayOfMonth(),
+                        showDatePicker(mBuffer.getEndDate().getYear(),
+                                mBuffer.getEndDate().getMonth(),
+                                mBuffer.getEndDate().getDayOfMonth(),
                                 new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                                mBuffer.termEndDate.setYear(i);
-                                mBuffer.termEndDate.setMonth(i1);
-                                mBuffer.termEndDate.setDayOfMonth(i2);
+                                mBuffer.getEndDate().setYear(i);
+                                mBuffer.getEndDate().setMonth(i1);
+                                mBuffer.getEndDate().setDayOfMonth(i2);
 
                                 reflectBufferToUI();
                             }
@@ -172,13 +163,13 @@ public class EditExactTermTaskFragment extends EditTaskFragment {
         mEndTimeButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        showTimePicker(mBuffer.termEndDate.getHourOfDay(),
-                                mBuffer.termEndDate.getMinute(),
+                        showTimePicker(mBuffer.getEndDate().getHourOfDay(),
+                                mBuffer.getEndDate().getMinute(),
                                 new TimePickerDialog.OnTimeSetListener() {
                                     @Override
                                     public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                                        mBuffer.termEndDate.setHourOfDay(i);
-                                        mBuffer.termEndDate.setMinute(i1);
+                                        mBuffer.getEndDate().setHourOfDay(i);
+                                        mBuffer.getEndDate().setMinute(i1);
 
                                         reflectBufferToUI();
                                     }

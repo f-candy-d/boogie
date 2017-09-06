@@ -19,10 +19,10 @@ public class EditTaskActivity extends AppCompatActivity {
 
     @Nullable
     static Bundle makeExtras(Task task) {
-        if (task != null && task.getType() != null) {
+        if (task != null && task.type != null) {
             Bundle extras = new Bundle();
             extras.putLong(EXTRA_TASK_ID, task.id);
-            extras.putInt(EXTRA_TASK_TYPE, task.getType().quantize());
+            extras.putInt(EXTRA_TASK_TYPE, task.type.quantize());
             return extras;
         }
 
@@ -64,8 +64,8 @@ public class EditTaskActivity extends AppCompatActivity {
 
         EditTaskFragment fragment = null;
         switch (type) {
-            case EXACT_TERM:
-                fragment = EditExactTermTaskFragment.newInstance(taskId);
+            case EVENT:
+                fragment = EditEventTaskFragment.newInstance(taskId);
                 break;
         }
 

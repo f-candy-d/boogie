@@ -5,9 +5,11 @@ import android.support.annotation.Nullable;
 
 import java.util.Calendar;
 
-import f_candy_d.com.boogie.data_store.TaskTableBase;
+import f_candy_d.com.boogie.data_store.DbContract;
+import f_candy_d.com.boogie.data_store.TaskTable;
 import f_candy_d.com.boogie.domain.SqlRepositoryUser;
 import f_candy_d.com.boogie.domain.structure.Task;
+import f_candy_d.com.boogie.domain.structure.TaskType;
 import f_candy_d.com.boogie.infra.SqlEntity;
 import f_candy_d.com.boogie.infra.SqlRepository;
 import f_candy_d.com.boogie.utils.InstantDate;
@@ -16,18 +18,41 @@ import f_candy_d.com.boogie.utils.InstantDate;
  * Created by daichi on 17/09/03.
  */
 
-abstract class TaskEntityRWService<T extends Task> extends Service implements SqlRepositoryUser {
+public class TaskEntityRWService extends Service implements SqlRepositoryUser {
 
     private SqlRepository mSqlRepository;
 
-    abstract public long insertTask(T task);
+    public long insertTask(Task task) {
+        onServiceStart();
+
+        // TODO; Check data validation
+        SqlEntity entity = makeSqlEntityFromTask(task, false);
+        final long id = mSqlRepository.insert(entity);
+
+        return (id != -1) ? id : DbContract.NULL_ID;
+    }
 
     @Nullable
-    abstract public T findTaskById(long id);
+    public Task findTaskById(long id) {
+        onServiceStart();
 
-    abstract public boolean updateTask(T task);
+        SqlEntity entity = mSqlRepository.selectRowById(TaskTable.TABLE_NAME, id);
+        if (entity != null) {
+            return makeTaskFromSqlEntity(entity);
+        }
+        return null;
+    }
 
-    abstract public boolean deleteTask(T task);
+    public boolean updateTask(Task task) {
+        onServiceStart();
+        // TODO; Check data validation
+        SqlEntity entity = makeSqlEntityFromTask(task, true);
+        return mSqlRepository.update(entity);
+    }
+
+    public boolean deleteTask(Task task) {
+        return mSqlRepository.delete(task.id, TaskTable.TABLE_NAME);
+    }
 
     @Override
     boolean isReady() {
@@ -39,38 +64,39 @@ abstract class TaskEntityRWService<T extends Task> extends Service implements Sq
         mSqlRepository = repository;
     }
 
-    protected SqlRepository getSqlRepository() {
-        return mSqlRepository;
-    }
-
     @NonNull
-    final protected SqlEntity makeSqlEntityFromTask(@NonNull Task task, boolean includeId) {
-        SqlEntity entity = new SqlEntity();
+    private SqlEntity makeSqlEntityFromTask(@NonNull Task task, boolean includeId) {
+        SqlEntity entity = new SqlEntity(TaskTable.TABLE_NAME);
 
         if (includeId) {
-            entity.put(TaskTableBase._ID, task.id);
+            entity.put(TaskTable._ID, task.id);
         }
-        entity.put(TaskTableBase._PRIORITY, task.priority);
-        entity.put(TaskTableBase._TERM_END_DATE, task.termEndDate.asCalendar());
-        entity.put(TaskTableBase._TERM_START_DATE, task.termStartDate.asCalendar());
-        entity.put(TaskTableBase._NOTE, task.note);
-        entity.put(TaskTableBase._TITLE, task.title);
+        entity.put(TaskTable._DATE_TERM_END, task.dateTermEnd.asCalendar());
+        entity.put(TaskTable._DATE_TERM_START, task.dateTermStart.asCalendar());
+        entity.put(TaskTable._TITLE, task.title);
+        entity.put(TaskTable._IS_DONE, task.isDone);
+        entity.put(TaskTable._DO_THROUGHOUT_TERM, task.doThroughoutTerm);
+        entity.put(TaskTable._TYPE, task.type);
 
         return entity;
     }
 
     @NonNull
-    final protected void makeTaskFromSqlEntity(@NonNull Task output, @NonNull SqlEntity entity) {
-        output.id = entity.getLongOrDefault(TaskTableBase._ID, output.id);
-        output.priority = entity.getIntOrDefault(TaskTableBase._PRIORITY, output.priority);
+    private Task makeTaskFromSqlEntity(@NonNull SqlEntity entity) {
+        Task task = new Task();
+        
+        task.id = entity.getLongOrDefault(TaskTable._ID, task.id);
+        task.title = entity.getStringOrDefault(TaskTable._TITLE, task.title);
+        task.isDone = entity.getBooleanOrDefault(TaskTable._IS_DONE, task.isDone);
+        task.doThroughoutTerm = entity.getBooleanOrDefault(TaskTable._DO_THROUGHOUT_TERM, task.doThroughoutTerm);
+        task.type = entity.getQuantizableEnumOrDefault(TaskTable._TYPE, TaskType.class, task.type);
 
-        Calendar date = entity.getCalendarOrDefault(TaskTableBase._TERM_END_DATE, null);
-        output.termEndDate = (date != null) ? new InstantDate(date) : null;
+        Calendar date = entity.getCalendarOrDefault(TaskTable._DATE_TERM_END, null);
+        task.dateTermEnd = (date != null) ? new InstantDate(date) : task.dateTermEnd;
 
-        date = entity.getCalendarOrDefault(TaskTableBase._TERM_START_DATE, null);
-        output.termStartDate = (date != null) ? new InstantDate(date) : null;
+        date = entity.getCalendarOrDefault(TaskTable._DATE_TERM_START, null);
+        task.dateTermStart= (date != null) ? new InstantDate(date) : task.dateTermStart;
 
-        output.note = entity.getStringOrDefault(TaskTableBase._NOTE, null);
-        output.title = entity.getStringOrDefault(TaskTableBase._TITLE, null);
+        return task;
     }
 }
