@@ -8,4 +8,5 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="f_candy_d.com.boogie.presentation.HomeActivity"
-    android:id="@+id/recycler_view_home"/>
+    android:id="@+id/recycler_view_home"
+    android:background="@color/colorPrimary"/>

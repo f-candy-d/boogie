@@ -3,12 +3,13 @@ package f_candy_d.com.boogie.presentation;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.Px;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.*;
-import android.support.v7.widget.DividerItemDecoration;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
@@ -18,12 +19,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import f_candy_d.com.boogie.R;
-import f_candy_d.com.boogie.data_store.DbContract;
-import f_candy_d.com.boogie.data_store.SqliteDatabaseOpenHelperImpl;
 import f_candy_d.com.boogie.domain.DomainDirector;
 import f_candy_d.com.boogie.domain.service.TaskRWService;
 import f_candy_d.com.boogie.domain.structure.Task;
-import f_candy_d.com.boogie.infra.sql.SqliteTableUtils;
 import f_candy_d.com.boogie.utils.*;
 
 public class HomeActivity extends EasyResultReceiveActivity {
@@ -43,6 +41,11 @@ public class HomeActivity extends EasyResultReceiveActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        if (Build.VERSION.SDK_INT >= 21) {3
+            getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        }
+
         init();
         initUI();
     }
@@ -73,12 +76,9 @@ public class HomeActivity extends EasyResultReceiveActivity {
         mDomainDirector.addService(new TaskRWService());
 
         final float density = getResources().getDisplayMetrics().density;
-        mItemSideSpace = (int) (12 * density);
-        mItemGroupTopSpace = (int) (8 * density);
-        mItemGroupBottomSpace = mItemGroupTopSpace;
-
-        mSimpleTaskGroupAdapter = new SimpleTaskGroupAdapter();
-        mSimpleTaskGroupAdapter.setHeaderTitle("Today's Tasks");
+        mItemSideSpace = (int) (6 * density);
+        mItemGroupTopSpace = (int) (6 * density);
+        mItemGroupBottomSpace = (int) (16 * density);
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -90,9 +90,9 @@ public class HomeActivity extends EasyResultReceiveActivity {
 
         ArrayList<Task> tasksInTerm =
                 mDomainDirector.getService(TaskRWService.class).getTasksInTerm(today, nextDay);
-        for (Task task : tasksInTerm) {
-            mSimpleTaskGroupAdapter.addTask(task);
-        }
+
+        mSimpleTaskGroupAdapter = new SimpleTaskGroupAdapter(tasksInTerm);
+        mSimpleTaskGroupAdapter.setHeaderTitle("Today's Tasks");
 
         mDividerItemDecoration = new f_candy_d.com.boogie.utils.DividerItemDecoration(
                 null, getResources().getDrawable(R.drawable.simple_divider, null));
@@ -104,15 +104,22 @@ public class HomeActivity extends EasyResultReceiveActivity {
             }
         });
 
-        mSpacerItemDecoration = new SpacerItemDecoration(this, null);
-        mSpacerItemDecoration.setContext(this);
-        mSpacerItemDecoration.setCallback(new SpacerItemDecoration.Callback() {
+        mSpacerItemDecoration = new SpacerItemDecoration(this, new SpacerItemDecoration.Callback() {
             @Override
             public void getInsertedSpaceAroundItem(int adapterPosition, Rect output) {
-                output.left = mItemSideSpace;
-                output.right = mItemSideSpace;
-                output.top = mItemGroupTopSpace;
-                if (adapterPosition == mSimpleTaskGroupAdapter.getItemCount() - 1) {
+                if (0 < adapterPosition) {
+                    output.top = mItemGroupTopSpace;
+                    if (adapterPosition % 2 == 0) {
+                        output.right = mItemSideSpace;
+                        output.left = mItemSideSpace / 2;
+                    } else {
+                        output.left = mItemSideSpace;
+                        output.right = mItemSideSpace / 2;
+                    }
+                }
+
+                if (adapterPosition == mSimpleTaskGroupAdapter.getItemCount() - 1 ||
+                        adapterPosition == mSimpleTaskGroupAdapter.getItemCount() - 2) {
                     output.bottom = mItemGroupBottomSpace;
                 }
             }
@@ -132,17 +139,19 @@ public class HomeActivity extends EasyResultReceiveActivity {
         });
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_home);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
+        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if (position == 0) return 2;
+                return 1;
+            }
+        });
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(mSimpleTaskGroupAdapter);
         recyclerView.addItemDecoration(mSpacerItemDecoration);
 //        recyclerView.addItemDecoration(mDividerItemDecoration);
-
-        ArrayList<InnerListAdapter> innerListAdapters = new ArrayList<>();
-        for (int i = 0; i < 10; ++i) {
-            innerListAdapters.add(new InnerListAdapter());
-        }
-        OuterListAdapter outerListAdapter = new OuterListAdapter(this, innerListAdapters);
-        recyclerView.setAdapter(outerListAdapter);
     }
 
     private void showWhatAddDialog() {
