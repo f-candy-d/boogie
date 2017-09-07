@@ -134,6 +134,6 @@ public class Task extends SqlEntityObject<TaskTableRule.ValidationErrorCode> {
     }
 
     public String toSummary() {
-        return title;
+        return this.title + " @" + this.type.toString();
     }
 }

@@ -105,7 +105,7 @@ class SimpleTaskGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     /**
      * TaskViewHolder
      */
-    static class TaskViewHolder extends RecyclerView.ViewHolder {
+    private static class TaskViewHolder extends RecyclerView.ViewHolder {
 
         TextView title;
 
@@ -115,7 +115,7 @@ class SimpleTaskGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
-    static class HeaderViewHolder extends RecyclerView.ViewHolder {
+    private static class HeaderViewHolder extends RecyclerView.ViewHolder {
 
         TextView title;
 

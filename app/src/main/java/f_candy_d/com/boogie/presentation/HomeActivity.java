@@ -8,22 +8,25 @@ import android.support.annotation.Nullable;
 import android.support.annotation.Px;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.*;
+import android.support.v7.widget.DividerItemDecoration;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+
 import f_candy_d.com.boogie.R;
 import f_candy_d.com.boogie.data_store.DbContract;
 import f_candy_d.com.boogie.data_store.SqliteDatabaseOpenHelperImpl;
 import f_candy_d.com.boogie.domain.DomainDirector;
+import f_candy_d.com.boogie.domain.service.TaskRWService;
+import f_candy_d.com.boogie.domain.structure.Task;
 import f_candy_d.com.boogie.infra.sql.SqliteTableUtils;
-import f_candy_d.com.boogie.utils.EasyResultReceiveActivity;
-import f_candy_d.com.boogie.utils.SpacerItemDecoration;
+import f_candy_d.com.boogie.utils.*;
 
 public class HomeActivity extends EasyResultReceiveActivity {
-
-    private static final int ENTRY_POINT_SCHEDULE = 0;
 
     private DomainDirector mDomainDirector;
 
@@ -42,7 +45,6 @@ public class HomeActivity extends EasyResultReceiveActivity {
         setContentView(R.layout.activity_home);
         init();
         initUI();
-        SqliteTableUtils.resetTable(new SqliteDatabaseOpenHelperImpl(this).openWritableDatabase(), DbContract.getTableSources());
     }
 
     @Override
@@ -67,16 +69,33 @@ public class HomeActivity extends EasyResultReceiveActivity {
     }
 
     private void init() {
+        mDomainDirector = new DomainDirector(this);
+        mDomainDirector.addService(new TaskRWService());
+
         final float density = getResources().getDisplayMetrics().density;
         mItemSideSpace = (int) (12 * density);
         mItemGroupTopSpace = (int) (8 * density);
         mItemGroupBottomSpace = mItemGroupTopSpace;
 
         mSimpleTaskGroupAdapter = new SimpleTaskGroupAdapter();
-        mSimpleTaskGroupAdapter.setHeaderTitle("Header mTitle");
+        mSimpleTaskGroupAdapter.setHeaderTitle("Today's Tasks");
 
-        mDividerItemDecoration = new f_candy_d.com.boogie.utils.DividerItemDecoration(null,
-                getResources().getDrawable(R.drawable.simple_divider, null));
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        final long today = calendar.getTimeInMillis();
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        final long nextDay = calendar.getTimeInMillis();
+
+        ArrayList<Task> tasksInTerm =
+                mDomainDirector.getService(TaskRWService.class).getTasksInTerm(today, nextDay);
+        for (Task task : tasksInTerm) {
+            mSimpleTaskGroupAdapter.addTask(task);
+        }
+
+        mDividerItemDecoration = new f_candy_d.com.boogie.utils.DividerItemDecoration(
+                null, getResources().getDrawable(R.drawable.simple_divider, null));
         mDividerItemDecoration.setCallback(new f_candy_d.com.boogie.utils.DividerItemDecoration.Callback() {
             @Override
             public boolean drawDividerAboveItem(int adapterPosition) {
@@ -92,9 +111,8 @@ public class HomeActivity extends EasyResultReceiveActivity {
             public void getInsertedSpaceAroundItem(int adapterPosition, Rect output) {
                 output.left = mItemSideSpace;
                 output.right = mItemSideSpace;
-                if (adapterPosition == 0) {
-                    output.top = mItemGroupTopSpace;
-                } else if (adapterPosition == mSimpleTaskGroupAdapter.getItemCount() - 1) {
+                output.top = mItemGroupTopSpace;
+                if (adapterPosition == mSimpleTaskGroupAdapter.getItemCount() - 1) {
                     output.bottom = mItemGroupBottomSpace;
                 }
             }
@@ -117,7 +135,14 @@ public class HomeActivity extends EasyResultReceiveActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mSimpleTaskGroupAdapter);
         recyclerView.addItemDecoration(mSpacerItemDecoration);
-        recyclerView.addItemDecoration(mDividerItemDecoration);
+//        recyclerView.addItemDecoration(mDividerItemDecoration);
+
+        ArrayList<InnerListAdapter> innerListAdapters = new ArrayList<>();
+        for (int i = 0; i < 10; ++i) {
+            innerListAdapters.add(new InnerListAdapter());
+        }
+        OuterListAdapter outerListAdapter = new OuterListAdapter(this, innerListAdapters);
+        recyclerView.setAdapter(outerListAdapter);
     }
 
     private void showWhatAddDialog() {

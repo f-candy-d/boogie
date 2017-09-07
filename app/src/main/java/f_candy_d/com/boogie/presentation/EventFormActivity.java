@@ -6,15 +6,19 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import f_candy_d.com.boogie.R;
 import f_candy_d.com.boogie.data_store.DbContract;
+import f_candy_d.com.boogie.data_store.TaskTableRule;
 import f_candy_d.com.boogie.domain.DomainDirector;
 import f_candy_d.com.boogie.domain.service.TaskRWService;
 import f_candy_d.com.boogie.domain.structure.EventTaskWrapper;
@@ -202,9 +206,10 @@ public class EventFormActivity extends AppCompatActivity {
 
     private void finishEditing() {
         String title = mEditTextTitle.getText().toString();
-        title = (title.length() != 0
-        ) ? title : null;
+        title = (title.length() != 0) ? title : null;
         mBuffer.setTitle(title);
+
+        if (!isValid()) return;
 
         final long id = mDomainDirector.getService(TaskRWService.class)
                 .insert(mBuffer.getTask());
@@ -213,5 +218,20 @@ public class EventFormActivity extends AppCompatActivity {
         intent.putExtra(EXTRA_TASK_ID, id);
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    private boolean isValid() {
+        TaskTableRule.ValidationErrorCode[] errorCodes = mBuffer.getTask().checkValidation();
+        String[] strings = new String[errorCodes.length];
+        int i = 0;
+        for (TaskTableRule.ValidationErrorCode errorCode : errorCodes) {
+            strings[i] = errorCode.toString();
+            ++i;
+        }
+        if (errorCodes.length != 0) {
+            Toast.makeText(this, TextUtils.join(", ", strings), Toast.LENGTH_LONG).show();
+        }
+
+        return (errorCodes.length == 0);
     }
 }
