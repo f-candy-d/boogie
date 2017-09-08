@@ -22,37 +22,37 @@ final public class Time {
      * The start time of a day since midnight in minutes.
      * Defined time is midnight of a day.
      *
-     * START_OF_DAY <= t < END_OF_DAY
+     * MIDNIGHT <= t < NEXT_DAY_MIDNIGHT
      * (t := Specific time of a day since midnight in minutes)
      */
-    public static final int START_OF_DAY = 0;
+    public static final int MIDNIGHT = 0;
 
     /**
      * The start time of a day since midnight in hours.
      * Defined time is midnight of a day.
      *
-     * START_OF_DAY_IN_HOURS <= t < END_OF_DAY_IN_HOURS
+     * START_OF_DAY_IN_HOURS <= t < NEXT_DAY_MIDNIGHT_IN_HOURS
      * (t := Specific time of a day since midnight in hours)
      */
-    public static final int START_OF_DAY_IN_HOUR = 0;
+    public static final int MIDNIGHT_IN_HOURS = 0;
 
     /**
      * The end time of a day since midnight in minutes.
      * Defined time is midnight of next day.
      *
-     * START_OF_DAY <= t < END_OF_DAY
+     * MIDNIGHT <= t < NEXT_DAY_MIDNIGHT
      * (t := Specific time of a day since midnight in minutes)
      */
-    public static final int END_OF_DAY = 24 * HOUR_IN_MINUTES;
+    public static final int NEXT_DAY_MIDNIGHT = 24 * HOUR_IN_MINUTES;
 
     /**
      * The end time of a day since midnight in minutes.
      * Defined time is midnight of next day.
      *
-     * START_OF_DAY_IN_HOURS <= t < END_OF_DAY_IN_HOURS
+     * START_OF_DAY_IN_HOURS <= t < NEXT_DAY_MIDNIGHT_IN_HOURS
      * (t := Specific time of a day since midnight in hours)
      */
-    public static final int END_OF_DAY_IN_HOURS = 24;
+    public static final int NEXT_DAY_MIDNIGHT_IN_HOURS = 24;
 
     /**
      * The time morning starts in minutes (since midnight).
@@ -82,9 +82,9 @@ final public class Time {
      * The time night starts in minutes (since midnight).
      * Defined time is 9 pm.
      *
-     * TIME_NIGHT_START <= (Night Time) < END_OF_DAY
+     * TIME_NIGHT_START <= (Night Time) < NEXT_DAY_MIDNIGHT
      * or
-     * START_OF_DAY <= (Night Time) < TIME_MORNING_START
+     * MIDNIGHT <= (Night Time) < TIME_MORNING_START
      */
     public static final int TIME_NIGHT_START = 21 * HOUR_IN_MINUTES;
 
@@ -95,7 +95,7 @@ final public class Time {
      * @return True if the passed time is valid, false otherwise
      */
     public static boolean isTimeValid(int hourOfDay, int minute) {
-        return (START_OF_DAY_IN_HOUR <= hourOfDay && hourOfDay < END_OF_DAY_IN_HOURS &&
+        return (MIDNIGHT_IN_HOURS <= hourOfDay && hourOfDay < NEXT_DAY_MIDNIGHT_IN_HOURS &&
                 ZERO_MINUTES <= minute && minute < HOUR_IN_MINUTES);
     }
 
@@ -105,8 +105,8 @@ final public class Time {
      * @return True if the passed time is valid, false otherwise
      */
     public static boolean isTimeValid(int timeSinceMidnightInMinutes) {
-        return (START_OF_DAY <= timeSinceMidnightInMinutes &&
-                timeSinceMidnightInMinutes < END_OF_DAY);
+        return (MIDNIGHT <= timeSinceMidnightInMinutes &&
+                timeSinceMidnightInMinutes < NEXT_DAY_MIDNIGHT);
     }
 
     /**

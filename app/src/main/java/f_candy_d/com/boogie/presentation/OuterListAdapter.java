@@ -1,10 +1,8 @@
-package f_candy_d.com.boogie.utils;
+package f_candy_d.com.boogie.presentation;
 
 import android.content.Context;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,18 +19,19 @@ class OuterListAdapter extends RecyclerView.Adapter<OuterListAdapter.OuterListVi
 
     private Context mContext;
     private ArrayList<InnerListAdapter> mAdapters;
-    private RecyclerView mParentRecyclerView;
 
-    OuterListAdapter(Context context, RecyclerView recyclerView) {
+    OuterListAdapter(Context context) {
         mContext = context;
         mAdapters = new ArrayList<>();
-        mParentRecyclerView = recyclerView;
     }
 
     public void addAdapter(InnerListAdapter adapter) {
-        adapter.setParentAdapter(this);
-        adapter.setPositionInParent(mAdapters.size());
         mAdapters.add(adapter);
+    }
+
+    public void addAdapterAndNotify(InnerListAdapter adapter) {
+        addAdapter(adapter);
+        notifyItemInserted(mAdapters.size() - 1);
     }
 
     @Override
@@ -46,28 +45,12 @@ class OuterListAdapter extends RecyclerView.Adapter<OuterListAdapter.OuterListVi
     @Override
     public void onBindViewHolder(OuterListViewHolder holder, int position) {
         InnerListAdapter innerAdapter = mAdapters.get(position);
-        innerAdapter.setParentRecyclerView(holder.recyclerView);
         holder.recyclerView.setAdapter(innerAdapter);
     }
 
     @Override
     public int getItemCount() {
         return mAdapters.size();
-    }
-
-    public void onInnerItemRemoved(final InnerListAdapter innerAdapter) {
-        if (innerAdapter.getItemCount() == 0) {
-            // update positions
-            mAdapters.remove(innerAdapter.getPositionInParent());
-            for (int i = 0; i < mAdapters.size(); ++i) {
-                mAdapters.get(i).setPositionInParent(i);
-            }
-            notifyItemRemoved(innerAdapter.getPositionInParent());
-
-        } else {
-            ((DefaultItemAnimator) mParentRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
-            notifyItemChanged(innerAdapter.getPositionInParent());
-        }
     }
 
     static final class OuterListViewHolder extends RecyclerView.ViewHolder {
@@ -79,23 +62,22 @@ class OuterListAdapter extends RecyclerView.Adapter<OuterListAdapter.OuterListVi
             recyclerView = view.findViewById(R.id.recyclerview_inside_cardview);
             // Enable touch event of items in the nested recycler view, and disable scrolling of it.
             recyclerView.setNestedScrollingEnabled(false);
+            recyclerView.setHasFixedSize(true);
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-            ItemTouchHelper.SimpleCallback callback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-                @Override
-                public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                    return false;
-                }
-
-                @Override
-                public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                    final int swipedPosition = viewHolder.getAdapterPosition();
-                    ((InnerListAdapter) recyclerView.getAdapter()).removeItem(swipedPosition);
-                }
-            };
-
-            ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
-            touchHelper.attachToRecyclerView(recyclerView);
+//            ItemTouchHelper.SimpleCallback callback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+//                @Override
+//                public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+//                    return false;
+//                }
+//
+//                @Override
+//                public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+//                }
+//            };
+//
+//            ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+//            touchHelper.attachToRecyclerView(recyclerView);
         }
     }
 }

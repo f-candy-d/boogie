@@ -13,9 +13,6 @@
         android:gravity="center_vertical"
         android:layout_margin="16dp"
         android:paddingLeft="16dp"
-        android:textColor="#FFFFFF"
-        android:backgroundTint="@color/colorPrimary"
-        android:background="@drawable/rect_rounded_corners"
         android:text="Schedule summary"
         android:id="@+id/list_item_schedule_summary_title"/>
 

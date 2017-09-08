@@ -37,11 +37,11 @@ public class InstantTime implements Comparable<InstantTime> {
     }
 
     public void startOfDay() {
-        set(Time.START_OF_DAY_IN_HOUR, Time.ZERO_MINUTES);
+        set(Time.MIDNIGHT_IN_HOURS, Time.ZERO_MINUTES);
     }
 
     public void endOfDay() {
-        set(Time.END_OF_DAY_IN_HOURS - 1, Time.HOUR_IN_MINUTES - 1);
+        set(Time.NEXT_DAY_MIDNIGHT_IN_HOURS - 1, Time.HOUR_IN_MINUTES - 1);
     }
 
     public int getTimeSinceMidnightInMinutes() {
@@ -65,7 +65,7 @@ public class InstantTime implements Comparable<InstantTime> {
     }
 
     public void addHourOfDay(int amount) {
-        mHourOfDay = (mHourOfDay + amount) % (Time.END_OF_DAY_IN_HOURS);
+        mHourOfDay = (mHourOfDay + amount) % (Time.NEXT_DAY_MIDNIGHT_IN_HOURS);
     }
 
     public void addMinute(int amount) {

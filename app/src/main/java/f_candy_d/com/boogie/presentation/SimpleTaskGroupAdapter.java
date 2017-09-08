@@ -16,7 +16,7 @@ import f_candy_d.com.boogie.domain.structure.Task;
  * Created by daichi on 17/09/03.
  */
 
-class SimpleTaskGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+class SimpleTaskGroupAdapter extends InnerListAdapter<RecyclerView.ViewHolder> {
 
     private static final int VIEW_TYPE_HEADER = 0;
     private static final int VIEW_TYPE_ITEM = 1;
