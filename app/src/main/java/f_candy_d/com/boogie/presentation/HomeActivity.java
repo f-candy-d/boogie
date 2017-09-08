@@ -9,18 +9,16 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.*;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 
-import f_candy_d.com.boogie.AppTimeDefine;
+import f_candy_d.com.boogie.PartsOfDay;
 import f_candy_d.com.boogie.R;
 import f_candy_d.com.boogie.domain.DomainDirector;
 import f_candy_d.com.boogie.domain.service.TaskRWService;
@@ -43,7 +41,7 @@ public class HomeActivity extends EasyResultReceiveActivity {
 
         init();
         initUI();
-        AppTimeDefine.testGetDatetimeMethods();
+        PartsOfDay.testGetDatetimeMethods();
     }
 
     @Override
