@@ -1,4 +1,4 @@
-package f_candy_d.com.boogie.presentation;
+package f_candy_d.com.boogie.view;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,13 +10,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import f_candy_d.com.boogie.R;
-import f_candy_d.com.boogie.domain.structure.Task;
+import f_candy_d.com.boogie.structure.Task;
 
 /**
  * Created by daichi on 17/09/03.
  */
 
-class SimpleTaskGroupAdapter extends InnerListAdapter<RecyclerView.ViewHolder> {
+public class SimpleTaskGroupAdapter extends InnerListAdapter<RecyclerView.ViewHolder> {
 
     private static final int VIEW_TYPE_HEADER = 0;
     private static final int VIEW_TYPE_ITEM = 1;
@@ -24,20 +24,20 @@ class SimpleTaskGroupAdapter extends InnerListAdapter<RecyclerView.ViewHolder> {
     private ArrayList<Task> mTasks;
     private String mHeaderTitle;
 
-    SimpleTaskGroupAdapter() {
+    public SimpleTaskGroupAdapter() {
         mTasks = new ArrayList<>();
     }
 
-    SimpleTaskGroupAdapter(Collection<Task> tasks) {
+    public SimpleTaskGroupAdapter(Collection<Task> tasks) {
         mTasks = new ArrayList<>(tasks);
     }
 
-    void addTask(Task task) {
+    public void addTask(Task task) {
         mTasks.add(task);
         notifyItemInserted(mTasks.size() - 1);
     }
 
-    void addTasks(Collection<Task> tasks) {
+    public void addTasks(Collection<Task> tasks) {
         int start = mTasks.size();
         mTasks.addAll(tasks);
         notifyItemRangeInserted(start, mTasks.size() - 1);

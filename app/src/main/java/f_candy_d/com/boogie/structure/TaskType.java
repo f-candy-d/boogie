@@ -1,4 +1,4 @@
-package f_candy_d.com.boogie.domain.structure;
+package f_candy_d.com.boogie.structure;
 
 import f_candy_d.com.boogie.utils.Quantizable;
 

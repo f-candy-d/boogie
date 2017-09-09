@@ -1,4 +1,4 @@
-package f_candy_d.com.boogie.presentation;
+package f_candy_d.com.boogie.view;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -21,8 +20,8 @@ import f_candy_d.com.boogie.data_store.DbContract;
 import f_candy_d.com.boogie.data_store.TaskTableRule;
 import f_candy_d.com.boogie.domain.DomainDirector;
 import f_candy_d.com.boogie.domain.service.TaskRWService;
-import f_candy_d.com.boogie.domain.structure.EventTaskWrapper;
-import f_candy_d.com.boogie.domain.structure.Task;
+import f_candy_d.com.boogie.structure.EventTaskWrapper;
+import f_candy_d.com.boogie.structure.Task;
 import f_candy_d.com.boogie.utils.InstantDate;
 
 public class EventFormActivity extends AppCompatActivity {

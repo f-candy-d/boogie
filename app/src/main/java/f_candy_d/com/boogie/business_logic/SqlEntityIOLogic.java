@@ -1,27 +1,27 @@
-package f_candy_d.com.boogie.domain.service;
+package f_candy_d.com.boogie.business_logic;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import f_candy_d.com.boogie.data_store.DbContract;
-import f_candy_d.com.boogie.domain.SqlRepositoryUser;
 import f_candy_d.com.boogie.structure.SqlEntityObject;
 import f_candy_d.com.boogie.infra.SqlEntity;
 import f_candy_d.com.boogie.infra.SqlRepository;
 
 /**
- * Created by daichi on 9/7/17.
+ * Created by daichi on 9/9/17.
  */
 
-public class SqlEntityRWService extends Service implements SqlRepositoryUser {
+public class SqlEntityIOLogic {
 
     private SqlRepository mSqlRepository;
 
-    public long insert(SqlEntityObject entityObject) {
-        onServiceStart();
+    public SqlEntityIOLogic(Context context) {
+        mSqlRepository = ImplAdoption.createSqlRepositoryImpl(context);
+    }
 
-        Log.d("mylog", entityObject.toSqlEntity(false).getValueMap().toString());
+    public long insert(SqlEntityObject entityObject) {
         if (!entityObject.isValid()) {
             return DbContract.NULL_ID;
         }
@@ -34,13 +34,10 @@ public class SqlEntityRWService extends Service implements SqlRepositoryUser {
 
     @Nullable
     SqlEntity findById(long id, @NonNull String table) {
-        onServiceStart();
         return mSqlRepository.selectRowById(table, id);
     }
 
     public boolean update(SqlEntityObject entityObject) {
-        onServiceStart();
-
         if (!entityObject.isValid()) {
             return false;
         }
@@ -53,18 +50,7 @@ public class SqlEntityRWService extends Service implements SqlRepositoryUser {
         return mSqlRepository.delete(entityObject.id, entityObject.getTableName());
     }
 
-    @Override
-    boolean isReady() {
-        return (mSqlRepository != null);
-    }
-
-    @Override
-    final public void setSqlRepository(@NonNull SqlRepository repository) {
-        mSqlRepository = repository;
-    }
-
-    SqlRepository getSqlRepository() {
+    protected SqlRepository getSqlRepository() {
         return mSqlRepository;
     }
-
 }

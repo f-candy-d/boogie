@@ -1,4 +1,4 @@
-package f_candy_d.com.boogie.presentation;
+package f_candy_d.com.boogie.view;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -15,20 +15,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Iterator;
 
-import f_candy_d.com.boogie.PartsOfDay;
+import f_candy_d.com.boogie.view_model.HomeViewModel;
+import f_candy_d.com.boogie.utils.PartsOfDay;
 import f_candy_d.com.boogie.R;
 import f_candy_d.com.boogie.domain.DomainDirector;
 import f_candy_d.com.boogie.domain.service.TaskRWService;
-import f_candy_d.com.boogie.domain.structure.Task;
+import f_candy_d.com.boogie.structure.Task;
 import f_candy_d.com.boogie.utils.*;
 
 public class HomeActivity extends EasyResultReceiveActivity {
 
     private DomainDirector mDomainDirector;
     private OuterListAdapter mTaskGroupsAdapter;
+    private HomeViewModel mIODirector;
+    private MergeAdapter mMergeAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,7 @@ public class HomeActivity extends EasyResultReceiveActivity {
         init();
         initUI();
         PartsOfDay.testGetDatetimeMethods();
+        Log.d("mylog", "curren part -> " + PartsOfDay.getCurrentPartOfDay().toString());
     }
 
     @Override
@@ -68,68 +70,17 @@ public class HomeActivity extends EasyResultReceiveActivity {
     private void init() {
         mDomainDirector = new DomainDirector(this);
         mDomainDirector.addService(new TaskRWService());
+        mIODirector = new HomeViewModel(this);
     }
 
     private void initRecyclerView() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.add(Calendar.MINUTE, Time.TIME_MORNING_START);
-        final long todayMorning = calendar.getTimeInMillis();
-        calendar.add(Calendar.DAY_OF_MONTH, 1);
-        final long nextDayMorning = calendar.getTimeInMillis();
-
-        ArrayList<Task> tasksInOneDay = mDomainDirector.getService(TaskRWService.class)
-                .getTasksInTerm(todayMorning, nextDayMorning);
-        Log.d("mylog", "get -> " + tasksInOneDay.size());
-
-        // Local class
-        class TimeRange {
-            private String name;
-            private int start;
-            private int end;
-
-            private TimeRange(String n, int s, int e) { name = n; start = s; end = e; }
-
-            private boolean isInRange(int timeSinceMidnightInMinutes) {
-                if (start <= end) {
-                    return (start <= timeSinceMidnightInMinutes && timeSinceMidnightInMinutes < end);
-                } else {
-                    return ((start <= timeSinceMidnightInMinutes && timeSinceMidnightInMinutes < Time.NEXT_DAY_MIDNIGHT) ||
-                            (Time.MIDNIGHT <= timeSinceMidnightInMinutes && timeSinceMidnightInMinutes < end));
-                }
-            }
-        }
-
-        ArrayList<TimeRange> ranges = new ArrayList<>();
-
-        // Morning
-        ranges.add(new TimeRange("Morning", Time.TIME_MORNING_START, Time.TIME_AFTERNOON_START));
-        // Afternoon
-        ranges.add(new TimeRange("Afternoon", Time.TIME_AFTERNOON_START, Time.TIME_EVENING_START));
-        // Evening
-        ranges.add(new TimeRange("Evening", Time.TIME_EVENING_START, Time.TIME_NIGHT_START));
-        // Night
-        ranges.add(new TimeRange("Night", Time.TIME_NIGHT_START, Time.TIME_MORNING_START));
-
         mTaskGroupsAdapter = new OuterListAdapter(this);
-        ArrayList<Task> tasks = new ArrayList<>();
-        Iterator<Task> iterator = tasksInOneDay.iterator();
 
-        for (TimeRange range : ranges) {
-            while (iterator.hasNext()) {
-                Task task = iterator.next();
-                if (range.isInRange(task.dateTermStart.getTimeOfDaySinceMidnightInMinutes())) {
-                    tasks.add(task);
-                    iterator.remove();
-                }
-            }
-
-            SimpleTaskGroupAdapter innerAdapter = new SimpleTaskGroupAdapter(tasks);
-            innerAdapter.setHeaderTitle(range.name);
-            mTaskGroupsAdapter.addAdapter(innerAdapter);
-            tasks.clear();
+        ArrayList<Group<Task>> taskGroups = mIODirector.showUpcomingTasksAsGroup();
+        for (Group<Task> group : taskGroups) {
+            SimpleTaskGroupAdapter adapter = new SimpleTaskGroupAdapter(group.getMembers());
+            adapter.setHeaderTitle(group.getName());
+            mTaskGroupsAdapter.addAdapter(adapter);
         }
 
 //        mDividerItemDecoration = new f_candy_d.com.boogie.utils.DividerItemDecoration(

@@ -1,4 +1,4 @@
-package f_candy_d.com.boogie.presentation;
+package f_candy_d.com.boogie.view;
 
 import android.support.v7.widget.RecyclerView;
 

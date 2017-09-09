@@ -3,7 +3,6 @@ package f_candy_d.com.boogie.domain;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 

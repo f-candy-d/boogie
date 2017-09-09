@@ -4,7 +4,7 @@ import android.provider.BaseColumns;
 
 import java.util.Calendar;
 
-import f_candy_d.com.boogie.domain.structure.TaskType;
+import f_candy_d.com.boogie.structure.TaskType;
 import f_candy_d.com.boogie.infra.sql.SqliteColumnDataType;
 import f_candy_d.com.boogie.infra.sql.SqliteTableUtils;
 

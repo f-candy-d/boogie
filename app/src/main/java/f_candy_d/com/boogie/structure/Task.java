@@ -1,4 +1,4 @@
-package f_candy_d.com.boogie.domain.structure;
+package f_candy_d.com.boogie.structure;
 
 import android.support.annotation.NonNull;
 import android.util.Log;

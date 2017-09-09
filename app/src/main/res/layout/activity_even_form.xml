@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="f_candy_d.com.boogie.presentation.EventFormActivity">
+    tools:context="f_candy_d.com.boogie.view.EventFormActivity">
 
     <EditText
         android:layout_width="0dp"

@@ -1,5 +1,6 @@
-package f_candy_d.com.boogie.domain.service;
+package f_candy_d.com.boogie.business_logic;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -13,10 +14,14 @@ import f_candy_d.com.boogie.infra.sql.SqlLogicExpr;
 import f_candy_d.com.boogie.infra.sql.SqlQuery;
 
 /**
- * Created by daichi on 17/09/03.
+ * Created by daichi on 9/9/17.
  */
 
-public class TaskRWService extends SqlEntityRWService {
+public class TaskIOLogic extends SqlEntityIOLogic {
+
+    public TaskIOLogic(Context context) {
+        super(context);
+    }
 
     @Nullable
     public Task findTaskById(long id) {
@@ -31,8 +36,8 @@ public class TaskRWService extends SqlEntityRWService {
     public ArrayList<Task> getTasksInTerm(long dateTermStart, long dateTermEnd) {
         SqlBetweenExpr between1 =
                 new SqlBetweenExpr(TaskTableRule._DATE_TERM_START)
-                .setRange(dateTermStart, dateTermEnd)
-                .setRangeBoundaries(false, true);
+                        .setRange(dateTermStart, dateTermEnd)
+                        .setRangeBoundaries(false, true);
 
         SqlBetweenExpr between2 =
                 new SqlBetweenExpr(TaskTableRule._DATE_TERM_END)

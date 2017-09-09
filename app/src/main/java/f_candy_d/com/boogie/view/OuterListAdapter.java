@@ -1,4 +1,4 @@
-package f_candy_d.com.boogie.presentation;
+package f_candy_d.com.boogie.view;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,12 +15,12 @@ import f_candy_d.com.boogie.R;
  * Created by daichi on 9/7/17.
  */
 
-class OuterListAdapter extends RecyclerView.Adapter<OuterListAdapter.OuterListViewHolder> {
+public class OuterListAdapter extends RecyclerView.Adapter<OuterListAdapter.OuterListViewHolder> {
 
     private Context mContext;
     private ArrayList<InnerListAdapter> mAdapters;
 
-    OuterListAdapter(Context context) {
+    public OuterListAdapter(Context context) {
         mContext = context;
         mAdapters = new ArrayList<>();
     }

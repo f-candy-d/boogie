@@ -1,4 +1,4 @@
-package f_candy_d.com.boogie;
+package f_candy_d.com.boogie.utils;
 
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -15,81 +15,91 @@ final public class PartsOfDay {
 
     private PartsOfDay() {}
 
-    public enum Flags {
+    public enum Parts {
         /**
          * The time morning starts in minutes (since midnight).
          * Defined time is 4 am.
          */
-        MORNING_START(4 * HOUR_IN_MINUTES),
+        MORNING(4 * HOUR_IN_MINUTES),
 
         /**
          * The time afternoon starts in minutes (since midnight).
          * Defined time is 12 pm.
          */
-        AFTERNOON_START(12 * HOUR_IN_MINUTES),
+        AFTERNOON(12 * HOUR_IN_MINUTES),
 
         /**
          * The time evening starts in minutes (since midnight).
          * Defined time is 5 pm.
          */
-        EVENING_START(17 * HOUR_IN_MINUTES),
+        EVENING(17 * HOUR_IN_MINUTES),
 
         /**
          * The time night starts in minutes (since midnight).
          * Defined time is 9 pm.
          */
-        NIGHT_START(21 * HOUR_IN_MINUTES);
+        NIGHT(21 * HOUR_IN_MINUTES);
 
         final private int mTime;
 
-        Flags(int timeSinceMidnightInMinutes) {
+        Parts(int timeSinceMidnightInMinutes) {
             mTime = timeSinceMidnightInMinutes;
         }
 
-        int getTimeSinceMidnightInMinutes() {
+        int getStartTimeSinceMidnightInMinutes() {
             return mTime;
         }
 
-        Flags nextFlag() {
+        public Parts nextPart() {
             switch (this) {
-                case MORNING_START: return AFTERNOON_START;
-                case AFTERNOON_START: return EVENING_START;
-                case EVENING_START: return NIGHT_START;
-                case NIGHT_START: return MORNING_START;
+                case MORNING: return AFTERNOON;
+                case AFTERNOON: return EVENING;
+                case EVENING: return NIGHT;
+                case NIGHT: return MORNING;
             }
-            return null;
+            throw new IllegalStateException();
+        }
+
+        public Parts previousPart() {
+            switch (this) {
+                case MORNING: return NIGHT;
+                case AFTERNOON: return MORNING;
+                case EVENING: return AFTERNOON;
+                case NIGHT: return EVENING;
+            }
+            throw new IllegalStateException();
         }
     }
 
-    public static long getNearestDatetime(Calendar base, Flags flag) {
+    public static long getNearestStartDatetime(Calendar base, Parts flag) {
         final long baseTime = base.getTimeInMillis();
-        final long prevDate = getPreviousDatetime(base, flag);
-        final long nextDate = getNextDatetime(base, flag);
+        final long prevDate = getPreviousStartDatetime(base, flag);
+        final long nextDate = getNextStartDatetime(base, flag);
         Calendar date = Calendar.getInstance();
         date.setTimeInMillis(nextDate);
 
-        return (prevDate <= baseTime && baseTime < getPreviousDatetime(date, flag.nextFlag()))
+        return (prevDate <= baseTime && baseTime < getPreviousStartDatetime(date, flag.nextPart()))
                 ? prevDate
                 : nextDate;
     }
 
-    public static long getNextDatetime(Calendar base, Flags flag) {
+    public static long getNextStartDatetime(Calendar base, Parts flag) {
         Calendar nextDate = Calendar.getInstance();
         nextDate.setTimeInMillis(base.getTimeInMillis());
-        setTimeSinceMidnightInMinutes(nextDate, flag.getTimeSinceMidnightInMinutes());
+        setTimeSinceMidnightInMinutes(nextDate, flag.getStartTimeSinceMidnightInMinutes());
         nextDate.set(Calendar.SECOND, 0);
 
-        if (base.after(nextDate)) {
+        if (!base.before(nextDate)) {
             nextDate.add(Calendar.DAY_OF_MONTH, 1);
         }
 
         return nextDate.getTimeInMillis();
     }
 
-    public static long getPreviousDatetime(Calendar base, Flags flag) {
+    public static long getPreviousStartDatetime(Calendar base, Parts flag) {
         Calendar prevDate = Calendar.getInstance();
         prevDate.setTimeInMillis(base.getTimeInMillis());
-        setTimeSinceMidnightInMinutes(prevDate, flag.getTimeSinceMidnightInMinutes());
+        setTimeSinceMidnightInMinutes(prevDate, flag.getStartTimeSinceMidnightInMinutes());
         prevDate.set(Calendar.SECOND, 0);
 
         if (base.before(prevDate)) {
@@ -109,19 +119,19 @@ final public class PartsOfDay {
     /**
      * Test of the following methods.
      *
-     * #getNextDatetime()
-     * #getPreviousDatetime()
-     * #getNearestDatetime()
+     * #getNextStartDatetime()
+     * #getPreviousStartDatetime()
+     * #getNearestStartDatetime()
      */
     public static void testGetDatetimeMethods() {
         final Calendar baseTime = Calendar.getInstance();
         Log.d("mylog", "base time -> " + DateFormat.format("yyyy-MM-dd hh:mm a", baseTime));
         Calendar tmp = Calendar.getInstance();
 
-        long m = PartsOfDay.getNextDatetime(baseTime, PartsOfDay.Flags.MORNING_START);
-        long a = PartsOfDay.getNextDatetime(baseTime, PartsOfDay.Flags.AFTERNOON_START);
-        long e = PartsOfDay.getNextDatetime(baseTime, PartsOfDay.Flags.EVENING_START);
-        long n = PartsOfDay.getNextDatetime(baseTime, PartsOfDay.Flags.NIGHT_START);
+        long m = PartsOfDay.getNextStartDatetime(baseTime, Parts.MORNING);
+        long a = PartsOfDay.getNextStartDatetime(baseTime, Parts.AFTERNOON);
+        long e = PartsOfDay.getNextStartDatetime(baseTime, Parts.EVENING);
+        long n = PartsOfDay.getNextStartDatetime(baseTime, Parts.NIGHT);
 
         tmp.setTimeInMillis(m);
         Log.d("mylog", "next date morning starts -> " + DateFormat.format("yyyy-MM-dd hh:mm a", tmp));
@@ -132,10 +142,10 @@ final public class PartsOfDay {
         tmp.setTimeInMillis(n);
         Log.d("mylog", "next date night starts -> " + DateFormat.format("yyyy-MM-dd hh:mm a", tmp));
 
-        m = PartsOfDay.getPreviousDatetime(baseTime, PartsOfDay.Flags.MORNING_START);
-        a = PartsOfDay.getPreviousDatetime(baseTime, PartsOfDay.Flags.AFTERNOON_START);
-        e = PartsOfDay.getPreviousDatetime(baseTime, PartsOfDay.Flags.EVENING_START);
-        n = PartsOfDay.getPreviousDatetime(baseTime, PartsOfDay.Flags.NIGHT_START);
+        m = PartsOfDay.getPreviousStartDatetime(baseTime, Parts.MORNING);
+        a = PartsOfDay.getPreviousStartDatetime(baseTime, Parts.AFTERNOON);
+        e = PartsOfDay.getPreviousStartDatetime(baseTime, Parts.EVENING);
+        n = PartsOfDay.getPreviousStartDatetime(baseTime, Parts.NIGHT);
 
         tmp.setTimeInMillis(m);
         Log.d("mylog", "previous date morning starts -> " + DateFormat.format("yyyy-MM-dd hh:mm a", tmp));
@@ -146,10 +156,10 @@ final public class PartsOfDay {
         tmp.setTimeInMillis(n);
         Log.d("mylog", "previous date night starts -> " + DateFormat.format("yyyy-MM-dd hh:mm a", tmp));
 
-        m = PartsOfDay.getNearestDatetime(baseTime, PartsOfDay.Flags.MORNING_START);
-        a = PartsOfDay.getNearestDatetime(baseTime, PartsOfDay.Flags.AFTERNOON_START);
-        e = PartsOfDay.getNearestDatetime(baseTime, PartsOfDay.Flags.EVENING_START);
-        n = PartsOfDay.getNearestDatetime(baseTime, PartsOfDay.Flags.NIGHT_START);
+        m = PartsOfDay.getNearestStartDatetime(baseTime, Parts.MORNING);
+        a = PartsOfDay.getNearestStartDatetime(baseTime, Parts.AFTERNOON);
+        e = PartsOfDay.getNearestStartDatetime(baseTime, Parts.EVENING);
+        n = PartsOfDay.getNearestStartDatetime(baseTime, Parts.NIGHT);
 
         tmp.setTimeInMillis(m);
         Log.d("mylog", "nearest date morning starts -> " + DateFormat.format("yyyy-MM-dd hh:mm a", tmp));
@@ -160,4 +170,26 @@ final public class PartsOfDay {
         tmp.setTimeInMillis(n);
         Log.d("mylog", "nearest date night starts -> " + DateFormat.format("yyyy-MM-dd hh:mm a", tmp));
     }
+
+    public static Parts getCurrentPartOfDay() {
+        Calendar now = Calendar.getInstance();
+        final int time = now.get(Calendar.HOUR_OF_DAY) * HOUR_IN_MINUTES + now.get(Calendar.MINUTE);
+
+        if (Parts.MORNING.getStartTimeSinceMidnightInMinutes() <= time &&
+                time < Parts.AFTERNOON.getStartTimeSinceMidnightInMinutes()) {
+            return Parts.MORNING;
+
+        } else if (Parts.AFTERNOON.getStartTimeSinceMidnightInMinutes() <= time &&
+                time < Parts.EVENING.getStartTimeSinceMidnightInMinutes()) {
+            return Parts.AFTERNOON;
+
+        } else if (Parts.EVENING.getStartTimeSinceMidnightInMinutes() <= time &&
+                time < Parts.NIGHT.getStartTimeSinceMidnightInMinutes()) {
+            return Parts.EVENING;
+
+        } else {
+            return Parts.NIGHT;
+        }
+    }
+
 }
